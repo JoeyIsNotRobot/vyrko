@@ -31,6 +31,10 @@
                                 <a class="navlink @if(request()->routeIs('jobs.*')) is-active @endif" href="{{ route('jobs.index') }}">{{ app()->getLocale() === 'en' ? 'Jobs' : 'Vagas' }}</a>
                                 <a class="navlink @if(request()->routeIs('resumes.*')) is-active @endif" href="{{ route('resumes.index') }}">{{ __('messages.nav.resumes') }}</a>
                                 <a class="navlink @if(request()->routeIs('linkedin.*')) is-active @endif" href="{{ route('linkedin.index') }}">{{ __('messages.nav.linkedin') }}</a>
+                                <a class="navlink @if(request()->routeIs('linkedin-search.*')) is-active @endif" href="{{ route('linkedin-search.index') }}">
+                                    {{ app()->getLocale() === 'en' ? 'Search Builder' : 'Search Builder' }}
+                                    <span class="badge-free" style="margin-left:4px;">{{ app()->getLocale() === 'en' ? 'Free' : 'Grátis' }}</span>
+                                </a>
                                 <a class="navlink @if(request()->routeIs('account.*')) is-active @endif" href="{{ route('account.index') }}">{{ app()->getLocale() === 'en' ? 'My account' : 'Minha conta' }}</a>
                             </div>
                             <div class="nav-section nav-actions">
