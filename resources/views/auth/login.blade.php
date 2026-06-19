@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('meta_title', 'Entrar no Vyrko')
+@section('meta_description', 'Entre no Vyrko para analisar vagas, revisar seu inventário e gerar currículos com base em evidências.')
+
 @section('content')
     @php($en = app()->getLocale() === 'en')
 
@@ -7,11 +10,11 @@
         <x-auth.value-panel
             :eyebrow="$en ? 'Access' : 'Acesso'"
             :title="$en ? 'Log in to Vyrko' : 'Entre no Vyrko'"
-            :subtitle="$en ? 'Tailor your resume for each job without inventing experience. See exactly which information was used.' : 'Adapte seu currículo para cada vaga sem inventar experiências. Veja exatamente quais informações foram usadas.'"
+            :subtitle="$en ? 'Continue where you left off: analyze jobs, review your inventory and generate resume versions based on evidence.' : 'Continue de onde parou: analise vagas, revise seu inventário e gere versões do currículo com base em evidências.'"
             :bullets="[
-                $en ? 'Job match in a few minutes' : 'Match com a vaga em poucos minutos',
-                $en ? 'Resume optimized for ATS and recruiters' : 'Currículo otimizado para ATS e recrutadores',
-                $en ? 'Traceable evidence from your Career Inventory' : 'Evidências rastreáveis do seu Inventário de Carreira',
+                $en ? 'Compare your trajectory with job requirements' : 'Compare sua trajetória com os requisitos da vaga',
+                $en ? 'Identify gaps before applying' : 'Identifique gaps antes de se candidatar',
+                $en ? 'Review every version before downloading' : 'Revise cada versão antes de baixar',
             ]"
         />
 
@@ -46,7 +49,7 @@
                 <a class="muted-link" href="{{ route('password.request') }}">{{ $en ? 'Forgot password?' : 'Esqueci minha senha' }}</a>
             </div>
 
-            <button class="btn" type="submit" data-loading-text="{{ $en ? 'Signing in...' : 'Entrando...' }}">{{ __('messages.nav.login') }}</button>
+            <button class="btn" type="submit" data-loading-text="{{ $en ? 'Signing in...' : 'Entrando...' }}">{{ $en ? 'Sign in with email' : 'Entrar com e-mail' }}</button>
             <p class="loading-hint">{{ $en ? 'Validating your credentials...' : 'Validando suas credenciais...' }}</p>
 
             <p class="auth-switch">
@@ -54,7 +57,7 @@
                 <a href="{{ route('register') }}">{{ $en ? 'Create your Career Inventory' : 'Crie seu Inventário de Carreira' }}</a>
             </p>
 
-            <p class="auth-note">{{ $en ? 'No scraping. No improper automation. You control which information is used.' : 'Sem scraping. Sem automação indevida. Você controla quais informações serão usadas.' }}</p>
+            <p class="auth-note">{{ $en ? 'No scraping. You control which information is used.' : 'Sem scraping. Você controla as informações usadas.' }}</p>
         </form>
     </section>
 @endsection

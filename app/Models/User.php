@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +15,9 @@ use Illuminate\Notifications\Notifiable;
 #[Fillable([
     'name',
     'email',
+    'pending_email',
+    'pending_email_token',
+    'pending_email_requested_at',
     'password',
     'plan_name',
     'monthly_resume_generations_limit',
@@ -24,15 +27,13 @@ use Illuminate\Notifications\Notifiable;
     'password_set_at',
     'onboarding_completed_at',
 ])]
-#[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+#[Hidden(['password', 'remember_token', 'pending_email_token'])]
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array
@@ -41,6 +42,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'password_set_at' => 'datetime',
+            'pending_email_requested_at' => 'datetime',
             'onboarding_completed_at' => 'datetime',
             'monthly_resume_generations_limit' => 'integer',
             'monthly_job_analysis_limit' => 'integer',
@@ -117,6 +119,11 @@ class User extends Authenticatable
     public function socialAccounts(): HasMany
     {
         return $this->hasMany(SocialAccount::class);
+    }
+
+    public function userConsents(): HasMany
+    {
+        return $this->hasMany(UserConsent::class);
     }
 
     public function usageLogs(): HasMany

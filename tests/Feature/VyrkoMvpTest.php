@@ -8,6 +8,7 @@ use App\Models\CandidateSkill;
 use App\Models\JobMatchReport;
 use App\Models\JobPost;
 use App\Models\ResumeVersion;
+use App\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -320,6 +321,93 @@ class VyrkoMvpTest extends TestCase
         $this->actingAs($user)
             ->get(route('resumes.preview', [$resume, 'modelo-inexistente']))
             ->assertNotFound();
+    }
+
+    public function test_paginas_legais_publicas_carregam(): void
+    {
+        $this->get(route('legal.terms'))->assertOk()->assertSee('Termos de Uso');
+        $this->get(route('legal.privacy'))->assertOk()->assertSee('Política de Privacidade');
+        $this->get(route('legal.data-consent'))->assertOk()->assertSee('Consentimento de IA');
+        $this->get(route('legal.social-data'))->assertOk()->assertSee('Uso de dados de Google e LinkedIn');
+    }
+
+    public function test_cadastro_exige_consentimentos_e_envia_para_confirmacao(): void
+    {
+        $this->post(route('register'), [
+            'name' => 'Pessoa Teste',
+            'email' => 'pessoa@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertSessionHasErrors(['terms_of_use', 'privacy_policy', 'ai_data_processing']);
+
+        $this->post(route('register'), [
+            'name' => 'Pessoa Teste',
+            'email' => 'pessoa@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'terms_of_use' => '1',
+            'privacy_policy' => '1',
+            'ai_data_processing' => '1',
+        ])->assertRedirect(route('verification.notice'));
+
+        $user = User::where('email', 'pessoa@example.com')->firstOrFail();
+
+        $this->assertNull($user->email_verified_at);
+        $this->assertDatabaseHas('user_consents', ['user_id' => $user->id, 'type' => 'terms_of_use']);
+        $this->assertDatabaseHas('user_consents', ['user_id' => $user->id, 'type' => 'privacy_policy']);
+        $this->assertDatabaseHas('user_consents', ['user_id' => $user->id, 'type' => 'ai_data_processing']);
+    }
+
+    public function test_usuario_sem_email_confirmado_nao_acessa_acoes_principais(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $this->actingAs($user)
+            ->get(route('jobs.create'))
+            ->assertRedirect(route('verification.notice'));
+
+        $this->actingAs($user)
+            ->get(route('onboarding.import'))
+            ->assertRedirect(route('verification.notice'));
+    }
+
+    public function test_minha_conta_nao_desconecta_ultimo_metodo_social_sem_senha(): void
+    {
+        $user = User::factory()->create([
+            'password_set_at' => null,
+        ]);
+        SocialAccount::create([
+            'user_id' => $user->id,
+            'provider' => 'google',
+            'provider_user_id' => 'google-123',
+            'email' => $user->email,
+            'name' => $user->name,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('account.social.disconnect', 'google'))
+            ->assertSessionHasErrors('social');
+
+        $this->assertDatabaseHas('social_accounts', [
+            'user_id' => $user->id,
+            'provider' => 'google',
+        ]);
+    }
+
+    public function test_usuario_social_pode_criar_senha_na_minha_conta(): void
+    {
+        $user = User::factory()->create([
+            'password_set_at' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->put(route('account.password.update'), [
+                'password' => 'new-secure-password',
+                'password_confirmation' => 'new-secure-password',
+            ])
+            ->assertRedirect();
+
+        $this->assertNotNull($user->refresh()->password_set_at);
     }
 
     /**

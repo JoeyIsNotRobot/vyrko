@@ -1,31 +1,34 @@
 @extends('layouts.app')
 
+@section('meta_title', 'Criar conta — Vyrko')
+@section('meta_description', 'Crie sua fonte de carreira no Vyrko e revise seus dados antes de gerar currículos personalizados.')
+
 @section('content')
     @php($en = app()->getLocale() === 'en')
 
     <section class="auth-shell">
         <x-auth.value-panel
-            eyebrow="MVP"
-            :title="$en ? 'Create your Career Inventory' : 'Crie seu Inventário de Carreira'"
-            :subtitle="$en ? 'Start with Google, LinkedIn or email. Then import your resume or paste your profile to generate tailored resumes.' : 'Comece com Google, LinkedIn ou e-mail. Depois importe seu currículo ou cole seu perfil para gerar currículos personalizados.'"
+            eyebrow="Vyrko"
+            :title="$en ? 'Create your career source in Vyrko' : 'Crie sua fonte de carreira no Vyrko'"
+            :subtitle="$en ? 'Start by importing a resume, connecting an account or filling information manually. You can review everything before generating any resume.' : 'Comece importando um currículo, conectando uma conta ou preenchendo manualmente. Você pode revisar tudo antes de gerar qualquer currículo.'"
             :bullets="[
-                $en ? 'Test the core flow before completing every detail' : 'Teste o fluxo básico antes de completar todo o perfil',
-                $en ? 'Use resume import, LinkedIn connection or guided forms' : 'Use importação de currículo, LinkedIn ou formulários guiados',
-                $en ? 'AI improves writing without inventing experience' : 'A IA melhora a escrita sem inventar experiências',
+                $en ? 'Import PDF, DOCX or TXT when you already have a resume' : 'Importe PDF, DOCX ou TXT quando já tiver um currículo',
+                $en ? 'Use Google or LinkedIn only for official provider data' : 'Use Google ou LinkedIn apenas com dados oficiais do provedor',
+                $en ? 'AI supports writing, but does not invent experience' : 'A IA apoia a escrita, mas não inventa experiências',
             ]"
         />
 
         <form class="auth-card stack-lg" method="POST" action="{{ route('register') }}" data-loading>
             @csrf
             <div>
-                <p class="eyebrow">{{ $en ? 'Start now' : 'Comece agora' }}</p>
-                <h2>{{ $en ? 'Create account' : 'Criar conta' }}</h2>
-                <p>{{ $en ? 'Create your account and continue to quick onboarding.' : 'Crie sua conta e continue para o onboarding rápido.' }}</p>
+                <p class="eyebrow">{{ $en ? 'New account' : 'Nova conta' }}</p>
+                <h2>{{ $en ? 'Create your account' : 'Criar conta' }}</h2>
+                <p>{{ $en ? 'Create your access and confirm your email before connecting accounts or generating resumes.' : 'Crie seu acesso e confirme seu e-mail antes de conectar contas ou gerar currículos.' }}</p>
             </div>
 
             <x-auth.social-buttons
-                :google-label="$en ? 'Sign up with Google' : 'Cadastrar com Google'"
-                :linkedin-label="$en ? 'Sign up with LinkedIn' : 'Cadastrar com LinkedIn'"
+                :google-label="$en ? 'Create account with Google' : 'Criar conta com Google'"
+                :linkedin-label="$en ? 'Create account with LinkedIn' : 'Criar conta com LinkedIn'"
             />
 
             <div class="auth-divider"><span>{{ $en ? 'or' : 'ou' }}</span></div>
@@ -49,20 +52,28 @@
                 </div>
             </div>
 
-            <label class="checkbox-line">
-                <input name="terms" type="checkbox" value="1" required>
-                {{ $en ? 'I agree to use Vyrko without adding false experience and accept the basic terms.' : 'Concordo em usar o Vyrko sem adicionar experiências falsas e aceito os termos básicos.' }}
-            </label>
+            <div class="consent-box stack">
+                <label class="checkbox-line">
+                    <input name="terms_of_use" type="checkbox" value="1" required @checked(old('terms_of_use'))>
+                    <span>Li e aceito os <a href="{{ route('legal.terms') }}" target="_blank">Termos de Uso</a>.</span>
+                </label>
+                <label class="checkbox-line">
+                    <input name="privacy_policy" type="checkbox" value="1" required @checked(old('privacy_policy'))>
+                    <span>Li e aceito a <a href="{{ route('legal.privacy') }}" target="_blank">Política de Privacidade</a>.</span>
+                </label>
+                <label class="checkbox-line">
+                    <input name="ai_data_processing" type="checkbox" value="1" required @checked(old('ai_data_processing'))>
+                    <span>Autorizo o Vyrko a processar as informações fornecidas para montar meu Inventário de Carreira, analisar vagas e gerar currículos personalizados.</span>
+                </label>
+            </div>
 
-            <button class="btn" type="submit" data-loading-text="{{ $en ? 'Creating account...' : 'Criando conta...' }}">{{ $en ? 'Create account' : 'Criar conta' }}</button>
-            <p class="loading-hint">{{ $en ? 'Creating your workspace...' : 'Criando seu workspace...' }}</p>
+            <button class="btn" type="submit" data-loading-text="{{ $en ? 'Creating account...' : 'Criando conta...' }}">{{ $en ? 'Create account with email' : 'Criar conta com e-mail' }}</button>
+            <p class="loading-hint">{{ $en ? 'Creating your account and sending verification email...' : 'Criando sua conta e enviando confirmação de e-mail...' }}</p>
 
             <p class="auth-switch">
                 {{ $en ? 'Already have an account?' : 'Já tem conta?' }}
                 <a href="{{ route('login') }}">{{ $en ? 'Sign in' : 'Entrar' }}</a>
             </p>
-
-            <p class="auth-note">{{ $en ? 'You can test the basic flow before completing the full profile.' : 'Você poderá testar o fluxo básico antes de completar todo o perfil.' }}</p>
         </form>
     </section>
 @endsection

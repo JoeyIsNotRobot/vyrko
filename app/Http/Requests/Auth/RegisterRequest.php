@@ -21,7 +21,9 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'terms' => ['accepted'],
+            'terms_of_use' => ['accepted'],
+            'privacy_policy' => ['accepted'],
+            'ai_data_processing' => ['accepted'],
         ];
     }
 }

@@ -135,3 +135,63 @@ document.addEventListener('submit', async (event) => {
         });
     }
 });
+
+const closeMobileMenu = () => {
+    menu?.classList.remove('is-open');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+};
+
+document.addEventListener('click', (event) => {
+    const sectionLink = event.target.closest('[data-section-link]');
+    if (!sectionLink) return;
+
+    closeMobileMenu();
+});
+
+const sectionLinks = Array.from(document.querySelectorAll('[data-section-link]'));
+const sections = Array.from(document.querySelectorAll('[data-section]'));
+
+if (sectionLinks.length && sections.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (!visible) return;
+
+        sectionLinks.forEach((link) => {
+            link.classList.toggle('is-active', link.dataset.sectionLink === visible.target.id);
+        });
+    }, {rootMargin: '-28% 0px -58% 0px', threshold: [0.12, 0.28, 0.5]});
+
+    sections.forEach((section) => observer.observe(section));
+}
+
+const activateImportPanel = (target) => {
+    const panels = document.querySelectorAll('[data-import-panel]');
+    const choices = document.querySelectorAll('[data-import-target]');
+
+    panels.forEach((panel) => {
+        panel.hidden = panel.id !== target;
+    });
+
+    choices.forEach((choice) => {
+        choice.classList.toggle('is-selected', choice.dataset.importTarget === target);
+    });
+
+    document.getElementById(target)?.scrollIntoView({behavior: 'smooth', block: 'start'});
+};
+
+document.addEventListener('click', (event) => {
+    const choice = event.target.closest('[data-import-target]');
+    if (!choice) return;
+
+    activateImportPanel(choice.dataset.importTarget);
+});
+
+if (document.querySelector('[data-import-panel]')) {
+    const initial = window.location.hash?.replace('#', '');
+    if (['arquivo', 'colar'].includes(initial)) {
+        activateImportPanel(initial);
+    }
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\SocialAccount;
 use App\Models\User;
+use App\Services\Legal\ConsentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +19,50 @@ class SocialAuthController extends Controller
 {
     private const PROVIDERS = ['google', 'linkedin'];
 
-    public function redirect(string $provider): RedirectResponse
+    public function consentCreate(Request $request, string $provider): View
     {
         $provider = $this->provider($provider);
+
+        return view('auth.social-consent', [
+            'provider' => $provider,
+            'providerLabel' => $this->providerLabel($provider),
+        ]);
+    }
+
+    public function consentStore(Request $request, string $provider, ConsentService $consentService): RedirectResponse
+    {
+        $provider = $this->provider($provider);
+
+        $request->validate([
+            'terms_of_use' => ['accepted'],
+            'privacy_policy' => ['accepted'],
+            'ai_data_processing' => ['accepted'],
+            'social_data_usage' => ['accepted'],
+        ]);
+
+        if ($request->user()) {
+            $consentService->acceptRequired($request->user(), $request, includeSocial: true, metadata: [
+                'source' => 'social_oauth',
+                'provider' => $provider,
+            ]);
+        } else {
+            $request->session()->put('social_consents_accepted', true);
+        }
+
+        return redirect()->route('auth.social.redirect', $provider);
+    }
+
+    public function redirect(Request $request, string $provider, ConsentService $consentService): RedirectResponse
+    {
+        $provider = $this->provider($provider);
+
+        if ($request->user() && ! $request->user()->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
+
+        if (! $this->hasSocialConsent($request, $consentService)) {
+            return redirect()->route('auth.social.consent', $provider);
+        }
 
         if (! $this->providerIsConfigured($provider)) {
             return $this->providerErrorRedirect($provider, $this->message(
@@ -32,7 +74,7 @@ class SocialAuthController extends Controller
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callback(Request $request, string $provider): RedirectResponse
+    public function callback(Request $request, string $provider, ConsentService $consentService): RedirectResponse
     {
         $provider = $this->provider($provider);
 
@@ -49,7 +91,7 @@ class SocialAuthController extends Controller
             'provider' => $provider,
             'provider_user_id' => (string) $socialiteUser->getId(),
             'email' => $socialiteUser->getEmail(),
-            'email_verified' => (bool) data_get($socialiteUser->getRaw(), 'email_verified', true),
+            'email_verified' => $this->emailVerifiedByProvider($provider, $socialiteUser->getRaw()),
             'name' => $socialiteUser->getName(),
             'avatar_url' => $socialiteUser->getAvatar(),
             'access_token' => $socialiteUser->token ?? null,
@@ -67,7 +109,7 @@ class SocialAuthController extends Controller
             return redirect()->route('auth.social.email.create', $provider);
         }
 
-        return $this->completeSocialLogin($request, $profile);
+        return $this->completeSocialLogin($request, $profile, $consentService);
     }
 
     public function emailCreate(Request $request, string $provider): View|RedirectResponse
@@ -84,7 +126,7 @@ class SocialAuthController extends Controller
         ]);
     }
 
-    public function emailStore(Request $request, string $provider): RedirectResponse
+    public function emailStore(Request $request, string $provider, ConsentService $consentService): RedirectResponse
     {
         $provider = $this->provider($provider);
         $pending = $request->session()->get('pending_social_profile');
@@ -113,13 +155,13 @@ class SocialAuthController extends Controller
             'access_token' => null,
             'refresh_token' => null,
             'token_expires_at' => null,
-        ]);
+        ], $consentService);
     }
 
     /**
      * @param  array<string, mixed>  $profile
      */
-    private function completeSocialLogin(Request $request, array $profile): RedirectResponse
+    private function completeSocialLogin(Request $request, array $profile, ConsentService $consentService): RedirectResponse
     {
         $currentUser = $request->user();
         $existingSocialAccount = SocialAccount::with('user')
@@ -128,7 +170,7 @@ class SocialAuthController extends Controller
             ->first();
 
         if ($existingSocialAccount && $currentUser && $existingSocialAccount->user_id !== $currentUser->id) {
-            return redirect()->route('account.connections')->withErrors([
+            return redirect()->route('account.index')->withErrors([
                 'social' => $this->message(
                     'Esta conta social já está vinculada a outro usuário.',
                     'This social account is already linked to another user.',
@@ -138,9 +180,14 @@ class SocialAuthController extends Controller
 
         if ($existingSocialAccount && ! $currentUser) {
             $this->updateSocialAccount($existingSocialAccount->user, $profile);
+            $consentService->acceptRequired($existingSocialAccount->user, $request, includeSocial: true, metadata: [
+                'source' => 'social_login',
+                'provider' => $profile['provider'],
+            ]);
+            $request->session()->forget('social_consents_accepted');
             Auth::login($existingSocialAccount->user, remember: true);
 
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended($this->afterLoginRoute($existingSocialAccount->user));
         }
 
         $createdUser = false;
@@ -162,19 +209,24 @@ class SocialAuthController extends Controller
         }
 
         $this->updateSocialAccount($user, $profile);
+        $consentService->acceptRequired($user, $request, includeSocial: true, metadata: [
+            'source' => $createdUser ? 'social_registration' : 'social_connection',
+            'provider' => $profile['provider'],
+        ]);
+        $request->session()->forget('social_consents_accepted');
 
         if (! $currentUser) {
             Auth::login($user, remember: true);
         }
 
         if ($currentUser) {
-            return redirect()->route('account.connections')->with('status', $this->message(
+            return redirect()->route('account.index')->with('status', $this->message(
                 "{$this->providerLabel($profile['provider'])} conectado com sucesso.",
                 "{$this->providerLabel($profile['provider'])} connected successfully.",
             ));
         }
 
-        return redirect()->route($createdUser ? 'onboarding.index' : 'dashboard');
+        return redirect()->route($createdUser && $user->hasVerifiedEmail() ? 'onboarding.index' : ($user->hasVerifiedEmail() ? 'dashboard' : 'verification.notice'));
     }
 
     /**
@@ -182,6 +234,10 @@ class SocialAuthController extends Controller
      */
     private function updateSocialAccount(User $user, array $profile): SocialAccount
     {
+        if ($profile['email_verified'] && filled($profile['email']) && $user->email === $profile['email'] && ! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
         return SocialAccount::updateOrCreate(
             [
                 'provider' => $profile['provider'],
@@ -200,6 +256,36 @@ class SocialAuthController extends Controller
         );
     }
 
+    private function hasSocialConsent(Request $request, ConsentService $consentService): bool
+    {
+        if ($request->user()) {
+            return $consentService->hasAccepted($request->user(), includeSocial: true);
+        }
+
+        return $request->session()->boolean('social_consents_accepted');
+    }
+
+    /**
+     * @param  array<string, mixed>  $raw
+     */
+    private function emailVerifiedByProvider(string $provider, array $raw): bool
+    {
+        return match ($provider) {
+            'google' => (bool) data_get($raw, 'email_verified', false),
+            'linkedin' => (bool) data_get($raw, 'email_verified', false),
+            default => false,
+        };
+    }
+
+    private function afterLoginRoute(User $user): string
+    {
+        if (! $user->hasVerifiedEmail()) {
+            return route('verification.notice', absolute: false);
+        }
+
+        return route('dashboard', absolute: false);
+    }
+
     private function provider(string $provider): string
     {
         abort_unless(in_array($provider, self::PROVIDERS, true), 404);
@@ -216,7 +302,7 @@ class SocialAuthController extends Controller
 
     private function providerErrorRedirect(string $provider, string $message): RedirectResponse
     {
-        return redirect()->route(Auth::check() ? 'account.connections' : 'login')
+        return redirect()->route(Auth::check() ? 'account.index' : 'login')
             ->withErrors([$provider => $message]);
     }
 

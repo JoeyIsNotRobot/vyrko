@@ -14,6 +14,9 @@ class OnboardingImportController extends Controller
     {
         return view('onboarding.import', [
             'profile' => $request->user()->linkedinProfiles()->latest()->first(),
+            'hasInventory' => $request->user()->candidateProfile()->exists()
+                || $request->user()->candidateExperiences()->exists()
+                || $request->user()->candidateSkills()->exists(),
         ]);
     }
 
