@@ -917,3 +917,123 @@ html { scroll-behavior: smooth; }
     .navlinks.is-open { max-height: calc(100vh - 76px); overflow: auto; }
     .footer-links { justify-content: flex-start; }
 }
+
+/* ── LinkedIn Search Builder ─────────────────────────────────── */
+.tags-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 28px;
+}
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--vscode-panel);
+    border: 1px solid var(--vscode-border);
+    border-radius: 9999px;
+    padding: 2px 10px;
+    font-size: 0.8rem;
+    color: var(--vscode-text);
+}
+.tag-chip button {
+    background: none;
+    border: none;
+    color: var(--vscode-muted);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    font-size: 1rem;
+}
+.tag-chip button:hover {
+    color: var(--vscode-danger);
+}
+.tags-input {
+    background: var(--vscode-bg);
+    border: 1px solid var(--vscode-border);
+    border-radius: 8px;
+    color: var(--vscode-text);
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+.tags-input:focus {
+    border-color: var(--vscode-blue);
+}
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--vscode-text);
+}
+.query-block {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    background: var(--vscode-bg);
+    border: 1px solid var(--vscode-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--vscode-success);
+    line-height: 1.6;
+    margin: 0;
+}
+.query-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.query-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.query-warning {
+    font-size: 0.82rem;
+    color: var(--vscode-warning);
+    background: rgba(220, 220, 170, 0.08);
+    border: 1px solid rgba(220, 220, 170, 0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin: 0;
+}
+.badge-free {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(78, 201, 176, 0.15);
+    color: var(--vscode-success);
+    border: 1px solid rgba(78, 201, 176, 0.3);
+    border-radius: 9999px;
+    padding: 2px 8px;
+    letter-spacing: 0.03em;
+}
+.search-disclaimer {
+    font-size: 0.78rem;
+    color: var(--vscode-muted);
+    line-height: 1.5;
+}
+@media (max-width: 768px) {
+    .query-actions {
+        flex-direction: column;
+    }
+    .query-actions a,
+    .query-actions button {
+        width: 100%;
+        text-align: center;
+    }
+}
