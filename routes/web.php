@@ -21,6 +21,7 @@ use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\LinkedinAnalysisController;
 use App\Http\Controllers\LinkedinProfileController;
+use App\Http\Controllers\LinkedInSearchController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\OnboardingImportController;
@@ -95,6 +96,11 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/account/password', [AccountConnectionsController::class, 'updatePassword'])->name('account.password.update');
     Route::post('/account/email/resend', [AccountConnectionsController::class, 'resendVerification'])->name('account.email.resend');
     Route::post('/account/social/{provider}/disconnect', [AccountConnectionsController::class, 'disconnect'])->name('account.social.disconnect');
+
+    Route::get('/linkedin-search-builder', [LinkedInSearchController::class, 'index'])
+        ->name('linkedin-search.index');
+    Route::post('/linkedin-search-builder', [LinkedInSearchController::class, 'generate'])
+        ->name('linkedin-search.generate');
 });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
