@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. A landing exibe "Seu currículo certo, para a vaga certa." e os campos de área/função usam autocomplete em vez de dropdowns fixos de tech
 **Plans**: 3 plans
 Plans:
-- [ ] 01-PLAN-01.md — Alpine.js install + migração completa de CSS vars (--vscode-* → --color-primary/etc.) + spacing metric-card
-- [ ] 01-PLAN-02.md — Footer flex layout + dashboard 3 cards + $completeness controller + copy strings 4 telas
+- [x] 01-PLAN-01.md — Alpine.js install + migração completa de CSS vars (--vscode-* → --color-primary/etc.) + spacing metric-card
+- [x] 01-PLAN-02.md — Footer flex layout + dashboard 3 cards + $completeness controller + copy strings 4 telas
 - [ ] 01-PLAN-03.md — Loading modal component Alpine + datalist autocomplete área/função
 **UI hint**: yes
 
