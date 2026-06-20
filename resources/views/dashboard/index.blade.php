@@ -3,7 +3,6 @@
 @section('content')
     @php
         $en = app()->getLocale() === 'en';
-        $bestScore = $bestReport?->overall_score;
         $missingLabels = $missingInventory->map(fn (string $item): string => match ($item) {
             'profile' => $en ? 'Profile' : 'Perfil',
             'experiences' => $en ? 'Experiences' : 'Experiências',
@@ -25,11 +24,30 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <section class="summary-grid">
-        <x-ui.metric-card :label="$en ? 'Generated resumes' : 'Currículos gerados'" :value="$resumeCount" :meta="$en ? 'Versions ready to copy or print' : 'Versões prontas para copiar ou imprimir'" />
-        <x-ui.metric-card :label="$en ? 'Analyzed jobs' : 'Vagas analisadas'" :value="$jobCount" :meta="$en ? 'Requirement workspaces created' : 'Workspaces de requisitos criados'" />
-        <x-ui.metric-card :label="$en ? 'Best match' : 'Melhor match'" :value="$bestScore ?? '—'" :suffix="$bestScore ? '%' : null" tone="success" :meta="$bestScore ? ($en ? 'Highest fit score so far' : 'Maior score de aderência até agora') : ($en ? 'Analyze a job to unlock this' : 'Analise uma vaga para destravar')" />
-        <x-ui.metric-card :label="$en ? 'Inventory gaps' : 'Gaps no inventário'" :value="$missingInventory->count()" tone="warning" :meta="$en ? 'Missing evidence blocks' : 'Blocos de evidência faltantes'" />
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+        <x-ui.metric-card
+            :label="$en ? 'Analyzed jobs' : 'Vagas analisadas'"
+            :value="$jobCount"
+            :meta="$en ? 'View all jobs →' : 'Ver todas as vagas →'"
+        />
+        <x-ui.metric-card
+            :label="$en ? 'Generated resumes' : 'Currículos gerados'"
+            :value="$resumeCount"
+            :meta="$en ? 'View all resumes →' : 'Ver todos os currículos →'"
+        />
+        {{-- Completude: inline porque metric-card não tem slot CTA --}}
+        <article class="metric-card {{ $completeness >= 80 ? 'metric-card-success' : 'metric-card-warning' }} min-h-[112px]">
+            <p class="metric-label">{{ $en ? 'Inventory completeness' : 'Completude do inventário' }}</p>
+            <div class="metric-value">{{ $completeness }}<small>%</small></div>
+            <p class="metric-meta">
+                @if ($completeness < 80)
+                    <a class="text-sm font-bold text-blue-400 hover:text-blue-300 underline-offset-2 hover:underline"
+                       href="{{ route('career.index') }}">Complete seu perfil →</a>
+                @else
+                    <span class="text-emerald-400">Inventário completo ✓</span>
+                @endif
+            </p>
+        </article>
     </section>
 
     <section class="content-grid">
