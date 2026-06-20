@@ -55,10 +55,10 @@
             </article>
         @empty
             <x-ui.empty-state
-                :title="$en ? 'No generated resumes' : 'Nenhum currículo gerado'"
-                :description="$en ? 'Start with a job analysis, then generate a tailored resume version from the match report.' : 'Comece por uma análise de vaga e gere uma versão personalizada a partir do relatório de match.'"
+                :title="$en ? 'No generated resumes' : 'Nenhum currículo nesta vaga'"
+                :description="$en ? 'Start with a job analysis, then generate a tailored resume version from the match report.' : 'Gere o currículo certo para esta vaga em segundos.'"
                 :cta-href="route('jobs.create')"
-                :cta-label="$en ? 'Analyze a job' : 'Analisar uma vaga'"
+                :cta-label="$en ? 'Analyze a job' : 'Gerar currículo →'"
                 :example="$en ? 'Flow: paste job → inspect match → generate resume → choose template.' : 'Fluxo: cole a vaga → revise o match → gere o currículo → escolha o modelo.'"
             />
         @endforelse

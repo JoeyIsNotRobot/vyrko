@@ -8,7 +8,7 @@
 
     <x-ui.page-header
         :eyebrow="$en ? 'Resume templates' : 'Modelos de currículo'"
-        :title="$en ? 'Choose the best format for this application' : 'Escolha o melhor formato para esta candidatura'"
+        :title="$en ? 'Choose the best format for this application' : 'Qual currículo enviar para esta vaga?'"
         :subtitle="$en ? 'Preview each template, then print or save as PDF using the browser dialog.' : 'Visualize cada modelo e depois imprima ou salve em PDF pelo diálogo do navegador.'"
     >
         <x-slot:actions>

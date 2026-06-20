@@ -59,10 +59,10 @@
             </article>
         @empty
             <x-ui.empty-state
-                :title="$en ? 'No jobs saved yet' : 'Nenhuma vaga salva ainda'"
-                :description="$en ? 'Create your first workspace by pasting responsibilities, requirements and stack details.' : 'Crie seu primeiro workspace colando responsabilidades, requisitos e detalhes da stack.'"
+                :title="$en ? 'No jobs saved yet' : 'Nenhum workspace ainda'"
+                :description="$en ? 'Create your first workspace by pasting responsibilities, requirements and stack details.' : 'Cada análise de vaga vira um workspace com match e currículo.'"
                 :cta-href="route('jobs.create')"
-                :cta-label="$en ? 'Analyze first job' : 'Analisar primeira vaga'"
+                :cta-label="$en ? 'Analyze first job' : 'Analisar nova vaga'"
                 :example="$en ? 'Example: Backend Laravel Engineer with Redis, MySQL and queues.' : 'Exemplo: Backend Laravel com Redis, MySQL e filas.'"
             />
         @endforelse

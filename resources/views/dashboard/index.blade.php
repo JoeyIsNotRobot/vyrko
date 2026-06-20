@@ -75,10 +75,10 @@
                 </div>
             @empty
                 <x-ui.empty-state
-                    :title="$en ? 'No job workspace yet' : 'Nenhum workspace de vaga ainda'"
-                    :description="$en ? 'Paste a complete job description to extract requirements, keywords and gaps.' : 'Cole uma descrição completa de vaga para extrair requisitos, palavras-chave e gaps.'"
+                    :title="$en ? 'No job workspace yet' : 'Nenhuma vaga analisada ainda'"
+                    :description="$en ? 'Paste a complete job description to extract requirements, keywords and gaps.' : 'Cole a descrição de uma vaga e a IA mapeia seu match.'"
                     :cta-href="route('jobs.create')"
-                    :cta-label="$en ? 'Analyze first job' : 'Analisar primeira vaga'"
+                    :cta-label="$en ? 'Analyze first job' : 'Analisar primeira vaga →'"
                     :example="$en ? 'Example: Senior Laravel Engineer · fintech · remote' : 'Exemplo: Desenvolvedor Laravel Sênior · fintech · remoto'"
                 />
             @endforelse
@@ -124,9 +124,9 @@
                 @empty
                     <x-ui.empty-state
                         :title="$en ? 'No resume generated yet' : 'Nenhum currículo gerado ainda'"
-                        :description="$en ? 'Generate a resume from a job analysis to see versions here.' : 'Gere um currículo a partir de uma análise de vaga para ver versões aqui.'"
+                        :description="$en ? 'Generate a resume from a job analysis to see versions here.' : 'Analise uma vaga para gerar seu currículo personalizado.'"
                         :cta-href="route('jobs.create')"
-                        :cta-label="$en ? 'Start with a job' : 'Começar por uma vaga'"
+                        :cta-label="$en ? 'Start with a job' : 'Começar por uma vaga →'"
                         :example="$en ? 'The best flow is: job → match → resume → template.' : 'O melhor fluxo é: vaga → match → currículo → modelo.'"
                     />
                 @endforelse
