@@ -75,7 +75,21 @@
 
                 <div class="field">
                     <label>{{ $en ? 'Professional area' : 'Área profissional' }}</label>
-                    <input name="professional_area" value="{{ old('professional_area', $profile?->professional_area) }}" placeholder="{{ $en ? 'Backend, Data, Product, DevOps...' : 'Backend, Dados, Produto, DevOps...' }}">
+                    <input name="professional_area" list="area-suggestions-onboarding" value="{{ old('professional_area', $profile?->professional_area) }}" placeholder="{{ $en ? 'Ex: Software Engineering, Finance, Marketing...' : 'Ex: Engenharia de Software, Finanças, Marketing...' }}">
+                    <datalist id="area-suggestions-onboarding">
+                        <option value="Engenharia de Software">
+                        <option value="Produto">
+                        <option value="Design">
+                        <option value="Dados e Analytics">
+                        <option value="Marketing">
+                        <option value="Finanças">
+                        <option value="Vendas">
+                        <option value="DevOps / Infraestrutura">
+                        <option value="Gestão">
+                        <option value="Direito">
+                        <option value="RH e Pessoas">
+                        <option value="Operações">
+                    </datalist>
                 </div>
             </article>
 
