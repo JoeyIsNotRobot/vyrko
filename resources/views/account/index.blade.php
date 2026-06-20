@@ -14,7 +14,7 @@
 
     <x-ui.page-header
         :eyebrow="$en ? 'My account' : 'Minha conta'"
-        :title="$en ? 'Access, security and data control' : 'Acesso, segurança e controle de dados'"
+        :title="$en ? 'Your account' : 'Sua conta'"
         :subtitle="$en ? 'Update your basic profile, manage sign-in methods and review privacy links without exposing internal tokens.' : 'Atualize perfil básico, gerencie métodos de entrada e revise links de privacidade sem expor tokens internos.'"
     >
         <x-slot:actions>

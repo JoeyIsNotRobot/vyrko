@@ -18,8 +18,8 @@
     <section id="home" class="hero landing-hero" data-section>
         <div class="stack landing-copy">
             <p class="eyebrow">Vyrko</p>
-            <h1>{{ $en ? 'Tailored resumes for each job, without inventing experience.' : 'Currículos personalizados para cada vaga, sem inventar experiências.' }}</h1>
-            <p>{{ $en ? 'Paste a job description, compare it with your trajectory and generate a resume version based on real evidence from your profile.' : 'Cole uma vaga, compare com sua trajetória e gere uma versão do currículo baseada em evidências reais do seu perfil.' }}</p>
+            <h1>{{ $en ? 'Tailored resumes for each job, without inventing experience.' : 'Seu currículo certo, para a vaga certa.' }}</h1>
+            <p>{{ $en ? 'Paste a job description, compare it with your trajectory and generate a resume version based on real evidence from your profile.' : 'Importe seu currículo, analise vagas e gere versões personalizadas que passam pelo ATS.' }}</p>
             <div class="actions">
                 <a class="btn" href="{{ route('register') }}">{{ $en ? 'Generate my first resume' : 'Gerar meu primeiro currículo' }}</a>
                 <a class="btn secondary" href="#como-funciona" data-section-link="como-funciona">{{ $en ? 'See how it works' : 'Ver como funciona' }}</a>

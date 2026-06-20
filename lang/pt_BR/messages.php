@@ -24,8 +24,8 @@ return [
     ],
     'career' => [
         'eyebrow' => 'Inventário de carreira',
-        'title' => 'Fonte da verdade do currículo',
-        'subtitle' => 'Cadastre apenas informações reais. Currículos gerados usam evidências deste inventário.',
+        'title' => 'Seu inventário de carreira',
+        'subtitle' => 'Tudo que você já fez, organizado. A IA usa isso para gerar currículos precisos.',
         'edit_profile' => 'Editar perfil',
         'import_resume' => 'Importar currículo pronto',
         'import_help' => 'Envie um PDF ou TXT para absorver perfil, experiências, habilidades, formação e idiomas.',

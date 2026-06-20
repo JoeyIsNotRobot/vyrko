@@ -16,7 +16,7 @@
     <x-ui.page-header
         eyebrow="Dashboard"
         :title="$en ? 'Your resume command center' : 'Seu centro de comando de currículos'"
-        :subtitle="$en ? 'Analyze jobs, see fit signals and generate focused resumes from real career evidence.' : 'Analise vagas, veja sinais de aderência e gere currículos focados a partir de evidências reais da carreira.'"
+        :subtitle="$en ? 'Analyze jobs, see fit signals and generate focused resumes from real career evidence.' : 'Analise vagas, gere currículos precisos e acompanhe sua candidatura.'"
     >
         <x-slot:actions>
             <a class="btn secondary" href="{{ route('career.index') }}">{{ $en ? 'Edit inventory' : 'Editar inventário' }}</a>
