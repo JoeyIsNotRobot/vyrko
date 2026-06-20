@@ -235,13 +235,22 @@
 
             tags.forEach(function (tag, i) {
                 // chip
-                const chip = document.createElement('span');
+                var chip = document.createElement('span');
                 chip.className = 'tag-chip';
-                chip.innerHTML = tag + ' <button type="button" data-idx="' + i + '" aria-label="Remover ' + tag + '">×</button>';
+
+                var tagText = document.createTextNode(tag + ' ');
+                var removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.dataset.idx = i;
+                removeBtn.setAttribute('aria-label', 'Remover ' + tag);
+                removeBtn.textContent = '×';
+
+                chip.appendChild(tagText);
+                chip.appendChild(removeBtn);
                 display.appendChild(chip);
 
                 // hidden input
-                const inp = document.createElement('input');
+                var inp = document.createElement('input');
                 inp.type  = 'hidden';
                 inp.name  = fieldName + '[]';
                 inp.value = tag;

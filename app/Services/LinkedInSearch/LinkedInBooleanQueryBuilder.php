@@ -132,7 +132,7 @@ class LinkedInBooleanQueryBuilder
         }
         if ($topSkills) {
             // Skills connected by AND (not OR) for higher precision
-            $groups[] = '(' . implode(' AND ', array_map(fn($s) => '"' . $s . '"', $topSkills)) . ')';
+            $groups[] = '(' . implode(' AND ', array_map(fn($s) => '"' . str_replace('"', "'", $s) . '"', $topSkills)) . ')';
         }
         if ($work) {
             $groups[] = $this->orGroup($work);
@@ -169,11 +169,12 @@ class LinkedInBooleanQueryBuilder
         $work   = $this->normalize($this->expandWorkModes($input->workModes));
 
         $groups = array_filter([
-            $this->orGroup($hiring),
+            $this->orGroup($this->normalize($hiring)),
             $skills ? $this->orGroup($skills) : null,
             $work   ? $this->orGroup($work)   : null,
         ]);
         $queryStr = $this->andGroups(array_values($groups));
+        $queryStr = $this->appendNot($queryStr, $input->excludedTerms);
 
         return new LinkedInQuery(
             type: 'recruiter',

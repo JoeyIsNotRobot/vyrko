@@ -1027,6 +1027,15 @@ html { scroll-behavior: smooth; }
     color: var(--vscode-muted);
     line-height: 1.5;
 }
+.btn.ghost {
+    background: transparent;
+    border: 1px solid var(--vscode-border);
+    color: var(--vscode-muted);
+}
+.btn.ghost:hover {
+    border-color: var(--vscode-blue);
+    color: var(--vscode-text);
+}
 @media (max-width: 768px) {
     .query-actions {
         flex-direction: column;
