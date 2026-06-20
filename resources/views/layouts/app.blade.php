@@ -12,7 +12,7 @@
         @stack('styles')
     </head>
     <body>
-        <div class="app-shell">
+        <div class="app-shell flex flex-col min-h-screen">
             <header class="topbar">
                 <div class="wrap nav">
                     <a class="brand" href="{{ auth()->check() ? route('dashboard') : route('home') }}" aria-label="Vyrko">
@@ -68,7 +68,7 @@
                 </div>
             </header>
 
-            <main class="wrap page">
+            <main class="wrap page flex-1">
                 @if (session('status'))
                     <div class="alert ok">{{ session('status') }}</div>
                 @endif

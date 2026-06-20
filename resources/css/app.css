@@ -63,7 +63,7 @@
 
 @layer components {
     .app-shell {
-        @apply min-h-screen;
+        @apply flex flex-col min-h-screen;
     }
 
     .app-card {
@@ -185,7 +185,7 @@ p { color: var(--color-muted); line-height: 1.65; }
 ul { color: var(--color-muted); }
 
 .wrap { width: min(1440px, calc(100% - 32px)); margin: 0 auto; }
-.app-shell { min-height: 100vh; padding-top: 76px; }
+.app-shell { min-height: 100vh; padding-top: 76px; display: flex; flex-direction: column; }
 .topbar {
     position: fixed;
     inset: 0 0 auto;
