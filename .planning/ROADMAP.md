@@ -30,7 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. O modal de loading universal pode ser invocado em qualquer operação com barra de progresso animada e steps configuráveis por operação
   4. O dashboard exibe exatamente 3 cards (Vagas analisadas, Currículos gerados, Completude do inventário) com CTA orientador quando completude < 80%
   5. A landing exibe "Seu currículo certo, para a vaga certa." e os campos de área/função usam autocomplete em vez de dropdowns fixos de tech
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 01-PLAN-01.md — Alpine.js install + migração completa de CSS vars (--vscode-* → --color-primary/etc.) + spacing metric-card
+- [ ] 01-PLAN-02.md — Footer flex layout + dashboard 3 cards + $completeness controller + copy strings 4 telas
+- [ ] 01-PLAN-03.md — Loading modal component Alpine + datalist autocomplete área/função
 **UI hint**: yes
 
 ### Phase 2: Inventário com Import
@@ -88,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Design System + Dashboard + Copy | TBD | Not started | - |
+| 1. Design System + Dashboard + Copy | 0/3 | Not started | - |
 | 2. Inventário com Import | TBD | Not started | - |
 | 3. Workspace de Vagas | TBD | Not started | - |
 | 4. LinkedIn QueryBuilder v2 | TBD | Not started | - |
