@@ -63,7 +63,7 @@
         }
 
         .career-summary-label {
-            color: var(--vscode-muted);
+            color: var(--color-muted);
             font-weight: 850;
         }
 
@@ -108,7 +108,7 @@
             border: 0;
             border-radius: 13px;
             padding: 11px 12px;
-            color: var(--vscode-muted);
+            color: var(--color-muted);
             background: transparent;
             font: inherit;
             font-size: 14px;
@@ -176,7 +176,7 @@
 
         .career-item-meta {
             margin: 4px 0 0;
-            color: var(--vscode-muted);
+            color: var(--color-muted);
             font-size: 13px;
         }
 
@@ -241,7 +241,7 @@
             display: flex;
             gap: 8px;
             align-items: center;
-            color: var(--vscode-muted);
+            color: var(--color-muted);
             font-size: 13px;
         }
 
@@ -250,11 +250,11 @@
             height: 9px;
             flex: 0 0 auto;
             border-radius: 999px;
-            background: var(--vscode-success);
+            background: var(--color-success);
         }
 
         .career-check-dot.missing {
-            background: var(--vscode-warning);
+            background: var(--color-warning);
         }
 
         @media (max-width: 1220px) {

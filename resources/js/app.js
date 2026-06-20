@@ -1,3 +1,34 @@
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+
+Alpine.data('loadingModal', () => ({
+    show: false,
+    progress: 0,
+    currentStep: '',
+    steps: [],
+    error: null,
+    open(steps) {
+        this.steps = steps;
+        this.currentStep = steps[0] ?? '';
+        this.progress = 0;
+        this.error = null;
+        this.show = true;
+    },
+    advance(stepIndex) {
+        this.currentStep = this.steps[stepIndex] ?? '';
+        this.progress = Math.round(((stepIndex + 1) / this.steps.length) * 100);
+    },
+    succeed() {
+        this.progress = 100;
+        setTimeout(() => { this.show = false; }, 400);
+    },
+    fail(message) {
+        this.error = message;
+    }
+}));
+
+Alpine.start();
+
 const config = window.Vyrko ?? {};
 
 const menuToggle = document.querySelector('[data-menu-toggle]');
