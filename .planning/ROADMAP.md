@@ -12,7 +12,7 @@ Transforma o Vyrko de prototype funcional em produto com UX profissional e model
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Design System + Dashboard + Copy** - Fundação visual unificada, dashboard orientador e textos revisados em todas as telas
+- [x] **Phase 1: Design System + Dashboard + Copy** - Fundação visual unificada, dashboard orientador e textos revisados em todas as telas
 - [ ] **Phase 2: Inventário com Import** - Importação de PDF/DOCX no inventário com modal de progresso e prompt de IA revisado
 - [ ] **Phase 3: Workspace de Vagas** - Fluxo guiado completo de análise de vaga com tratamento de erros, badge de adequação e recomendação de template
 - [ ] **Phase 4: LinkedIn QueryBuilder v2** - QueryBuilder com chips, campos universais e URLs corretas para Jobs e Posts
@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-PLAN-01.md — Alpine.js install + migração completa de CSS vars (--vscode-* → --color-primary/etc.) + spacing metric-card
 - [x] 01-PLAN-02.md — Footer flex layout + dashboard 3 cards + $completeness controller + copy strings 4 telas
-- [ ] 01-PLAN-03.md — Loading modal component Alpine + datalist autocomplete área/função
+- [x] 01-PLAN-03.md — Loading modal component Alpine + datalist autocomplete área/função
 **UI hint**: yes
 
 ### Phase 2: Inventário com Import
@@ -92,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Design System + Dashboard + Copy | 0/3 | Not started | - |
+| 1. Design System + Dashboard + Copy | 3/3 | Complete | 2026-06-20 |
 | 2. Inventário com Import | TBD | Not started | - |
 | 3. Workspace de Vagas | TBD | Not started | - |
 | 4. LinkedIn QueryBuilder v2 | TBD | Not started | - |
