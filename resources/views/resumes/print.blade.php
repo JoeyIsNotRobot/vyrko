@@ -6,7 +6,7 @@
         <title>{{ $resumeVersion->title }} · PDF</title>
         <style>
             :root {
-                --vscode-border: #3e3e42;
+                --border: #334155;
             }
 
             body {
