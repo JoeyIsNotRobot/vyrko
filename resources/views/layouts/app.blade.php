@@ -102,6 +102,7 @@
                 savedText: @json(__('messages.common.saved')),
             };
         </script>
+        <x-ui.loading-modal />
         @stack('scripts')
     </body>
 </html>
