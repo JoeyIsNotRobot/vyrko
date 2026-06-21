@@ -60,7 +60,12 @@
 <div class="career-item inventory-item">
     <div class="actions" style="justify-content:space-between; align-items:flex-start">
         <div>
-            <div class="career-item-title">{{ $title }}</div>
+            <div class="career-item-title">
+                {{ $title }}
+                @if(session('just_imported'))
+                    <span class="import-badge" aria-label="Preenchido pela IA durante importação">VIA IA</span>
+                @endif
+            </div>
             @if ($meta)
                 <p class="career-item-meta">{{ $meta }}</p>
             @endif

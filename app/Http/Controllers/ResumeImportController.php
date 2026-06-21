@@ -25,6 +25,8 @@ class ResumeImportController extends Controller
             return back()->withErrors(['resume' => $exception->getMessage()]);
         }
 
+        session()->flash('just_imported', true);
+
         return $this->careerResponse($request, __('messages.career.imported'));
     }
 }

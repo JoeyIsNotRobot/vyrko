@@ -466,6 +466,34 @@ class VyrkoMvpTest extends TestCase
         ];
     }
 
+    public function test_importacao_mapeia_campos_campo_a_campo(): void
+    {
+        $user = User::factory()->create(['email' => 'campos@example.com']);
+        $file = UploadedFile::fake()->createWithContent('campos.txt', $this->camposResumeText());
+
+        $response = $this->actingAs($user)
+            ->post(route('career.import'), ['resume' => $file], ['Accept' => 'application/json']);
+
+        $response->assertOk()->assertJsonFragment([
+            'message' => __('messages.career.imported'),
+        ]);
+
+        $this->assertDatabaseHas('candidate_educations', [
+            'user_id' => $user->id,
+            'institution' => 'UFMG',
+        ]);
+
+        $this->assertDatabaseHas('candidate_certifications', [
+            'user_id' => $user->id,
+            'issuer' => 'Amazon',
+        ]);
+
+        $this->assertDatabaseHas('candidate_languages', [
+            'user_id' => $user->id,
+            'proficiency' => 'Avançado',
+        ]);
+    }
+
     private function hectorResumeText(): string
     {
         return <<<'TEXT'
@@ -491,6 +519,33 @@ Applicativa Technologies | Estagiário de Desenvolvimento | mar/2022 - fev/2023
 FORMAÇÃO E IDIOMAS
 UNOPAR - Universidade Norte do Paraná | Análise e Desenvolvimento de Sistemas (ADS) | mar/2022 - fev/2023
 Português: nativo/fluente | Inglês: básico a intermediário, com leitura técnica e comunicação escrita em evolução
+TEXT;
+    }
+
+    private function camposResumeText(): string
+    {
+        return <<<'TEXT'
+JOÃO CAMPOS
+Engenheiro de Software | AWS, PHP, Laravel
+São Paulo, SP, Brasil
+
+RESUMO PROFISSIONAL
+Engenheiro com foco em cloud e backend PHP.
+
+COMPETÊNCIAS TÉCNICAS
+Backend: PHP 8, Laravel
+
+EXPERIÊNCIA PROFISSIONAL
+TechCorp | Engenheiro Backend | jan/2022 - atual
+
+FORMAÇÃO
+UFMG | Bacharelado | Ciência da Computação | mar/2018 - dez/2021
+
+CERTIFICAÇÕES
+AWS Certified Solutions Architect Associate | Amazon | 2023-01-15 |
+
+IDIOMAS
+Inglês: Avançado
 TEXT;
     }
 }

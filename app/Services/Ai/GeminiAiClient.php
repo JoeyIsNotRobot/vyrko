@@ -249,7 +249,7 @@ PROMPT;
      */
     private function resumeImportParsePrompt(array $payload): string
     {
-        return $this->jsonPrompt('Extraia dados estruturados do currículo enviado. Não complete lacunas por inferência; se o texto não disser, use null ou array vazio.', [
+        return $this->jsonPrompt('Extraia dados estruturados do currículo enviado. Regras estritas: (1) Não complete lacunas por inferência — se o texto não disser explicitamente, use null ou array vazio. (2) Não invente dados de contato, datas ou empresas. (3) Não combine campos de seções diferentes. (4) Cada item de array representa exatamente um registro encontrado no texto.', [
             'date_rule' => 'Datas devem vir em YYYY-MM-DD quando houver mês/ano suficiente; caso contrário null.',
             'schema' => [
                 'profile' => [
@@ -275,10 +275,18 @@ PROMPT;
                 'experiences' => [
                     ['company_name' => 'string', 'role_title' => 'string', 'employment_type' => 'string|null', 'location' => 'string|null', 'start_date' => 'YYYY-MM-DD|null', 'end_date' => 'YYYY-MM-DD|null', 'is_current' => 'boolean', 'description' => 'string|null', 'responsibilities' => ['string'], 'technologies' => ['string'], 'achievements' => [['title' => 'string', 'description' => 'string', 'impact_metric' => 'string|null', 'evidence_tags' => ['string']]]],
                 ],
-                'projects' => ['array'],
-                'educations' => ['array'],
-                'certifications' => ['array'],
-                'languages' => ['array'],
+                'projects' => [
+                    ['name' => 'string', 'description' => 'string|null', 'url' => 'string|null', 'start_date' => 'YYYY-MM-DD|null', 'end_date' => 'YYYY-MM-DD|null', 'technologies' => ['string']],
+                ],
+                'educations' => [
+                    ['institution' => 'string', 'degree' => 'string|null', 'field_of_study' => 'string|null', 'start_date' => 'YYYY-MM-DD|null', 'end_date' => 'YYYY-MM-DD|null'],
+                ],
+                'certifications' => [
+                    ['name' => 'string', 'issuer' => 'string|null', 'issued_at' => 'YYYY-MM-DD|null', 'expires_at' => 'YYYY-MM-DD|null', 'credential_url' => 'string|null'],
+                ],
+                'languages' => [
+                    ['language' => 'string', 'proficiency' => 'Nativo|Fluente|Avançado|Intermediário|Básico', 'notes' => 'string|null'],
+                ],
                 'achievements' => ['array'],
             ],
             'payload' => $payload,
