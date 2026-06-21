@@ -371,6 +371,20 @@
             color: var(--color-muted, #94A3B8);
             flex-shrink: 0;
         }
+
+        .import-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #93C5FD;
+            background: rgba(59, 130, 246, .1);
+            border: 1px solid rgba(59, 130, 246, .2);
+            border-radius: 999px;
+            padding: 2px 8px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
     </style>
 @endpush
 

@@ -294,7 +294,7 @@ class FakeAiClient implements AiClient
             'experiences' => $this->parsedExperiences($text),
             'projects' => [],
             'educations' => $this->parsedEducations($text),
-            'certifications' => [],
+            'certifications' => $this->parsedCertifications($text),
             'languages' => $this->parsedLanguages($text),
             'achievements' => [],
         ];
@@ -460,6 +460,47 @@ class FakeAiClient implements AiClient
             ])
             ->values()
             ->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function parsedCertifications(string $text): array
+    {
+        $certifications = [];
+        $section = '';
+
+        foreach (['CERTIFICAÇÕES', 'CERTIFICACOES', 'CERTIFICATIONS'] as $marker) {
+            if (str_contains(mb_strtoupper($text), $marker)) {
+                $after = Str::after(mb_strtoupper($text), $marker);
+                $section = mb_substr($text, mb_strlen($text) - mb_strlen($after));
+                break;
+            }
+        }
+
+        if ($section === '') {
+            return [];
+        }
+
+        foreach (explode("\n", $section) as $line) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+            $parts = array_map('trim', explode('|', $line));
+            if (count($parts) < 2) {
+                continue;
+            }
+            $certifications[] = [
+                'name' => $parts[0],
+                'issuer' => $parts[1] !== '' ? $parts[1] : null,
+                'issued_at' => isset($parts[2]) && preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($parts[2])) ? trim($parts[2]) : null,
+                'expires_at' => null,
+                'credential_url' => null,
+            ];
+        }
+
+        return $certifications;
     }
 
     /**
