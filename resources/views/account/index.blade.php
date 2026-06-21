@@ -122,7 +122,7 @@
 
                     @if ($account)
                         <div class="connection-profile">
-                            @if ($account->avatar_url)
+                            @if ($account->avatar_url && str_starts_with($account->avatar_url, 'https://'))
                                 <img src="{{ $account->avatar_url }}" alt="" loading="lazy">
                             @endif
                             <div>
