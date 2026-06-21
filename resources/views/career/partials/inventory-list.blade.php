@@ -239,21 +239,5 @@
             </div>
         </article>
 
-        <article class="career-quality-card stack">
-            <div>
-                <p class="eyebrow">{{ __('messages.career.import_resume') }}</p>
-                <h2>{{ $en ? 'Import and enrich' : 'Importar e enriquecer' }}</h2>
-                <p>{{ __('messages.career.import_help') }}</p>
-            </div>
-            <form class="stack" method="POST" action="{{ route('career.import') }}" enctype="multipart/form-data" data-career-ajax>
-                @csrf
-                <div>
-                    <label>{{ __('messages.fields.file') }}</label>
-                    <input name="resume" type="file" accept=".pdf,.docx,.txt,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
-                </div>
-                <button class="btn secondary" type="submit" data-loading-text="{{ $en ? 'Importing...' : 'Importando...' }}">{{ __('messages.actions.import') }}</button>
-                <p class="loading-hint">{{ $en ? 'Extracting resume text and filling the inventory...' : 'Extraindo texto do currículo e preenchendo o inventário...' }}</p>
-            </form>
-        </article>
     </aside>
 </div>
