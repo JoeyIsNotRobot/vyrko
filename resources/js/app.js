@@ -149,7 +149,15 @@ document.addEventListener('submit', async (event) => {
             body: new FormData(form),
         });
 
-        const payload = await response.json();
+        const text = await response.text();
+        let payload;
+        try {
+            payload = JSON.parse(text);
+        } catch {
+            payload = { message: response.status === 419
+                ? 'Sessão expirada. Recarregue a página.'
+                : `Erro do servidor (${response.status}).` };
+        }
 
         if (!response.ok) {
             showErrors(payload.errors || [payload.message || 'Erro']);
