@@ -7,10 +7,10 @@
 
 ### Design System (DESIGN)
 
-- [ ] **DESIGN-01**: Sistema de cores atualizado aplicado globalmente — azul #2563EB, positivo #10B981, warning #F59E0B
+- [x] **DESIGN-01**: Sistema de cores atualizado aplicado globalmente — azul #2563EB, positivo #10B981, warning #F59E0B
 - [x] **DESIGN-02**: Footer fixo no rodapé de todas as páginas via layout wrapper (min-h-screen flex flex-col / main flex-1)
-- [ ] **DESIGN-03**: Componente de modal de loading universal reutilizável com backdrop blur, barra de progresso animada, steps dinâmicos por operação, bloqueio de interação e fechamento apenas após conclusão ou erro
-- [ ] **DESIGN-04**: Espaçamento e tipografia padronizados em todos os cards e listas (gap-6 entre blocos, mb-1 entre label e valor)
+- [x] **DESIGN-03**: Componente de modal de loading universal reutilizável com backdrop blur, barra de progresso animada, steps dinâmicos por operação, bloqueio de interação e fechamento apenas após conclusão ou erro
+- [x] **DESIGN-04**: Espaçamento e tipografia padronizados em todos os cards e listas (gap-6 entre blocos, mb-1 entre label e valor)
 
 ### Dashboard (DASH)
 
@@ -46,7 +46,7 @@
 
 - [x] **COPY-01**: Landing headline atualizado para "Seu currículo certo, para a vaga certa."
 - [x] **COPY-02**: Textos de todas as telas revisados: Inventário ("Seu inventário de carreira"), Templates ("Qual currículo enviar para esta vaga?"), Conta ("Sua conta"), empty states orientadores
-- [ ] **COPY-03**: Campos de área de atuação e função com autocomplete (não dropdowns fixos com opções só de tech)
+- [x] **COPY-03**: Campos de área de atuação e função com autocomplete (não dropdowns fixos com opções só de tech)
 
 ### Monetização (MONO)
 
@@ -91,15 +91,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DESIGN-01 | Phase 1 | Pending |
+| DESIGN-01 | Phase 1 | Complete |
 | DESIGN-02 | Phase 1 | Complete |
-| DESIGN-03 | Phase 1 | Pending |
-| DESIGN-04 | Phase 1 | Pending |
+| DESIGN-03 | Phase 1 | Complete |
+| DESIGN-04 | Phase 1 | Complete |
 | DASH-01 | Phase 1 | Complete |
 | DASH-02 | Phase 1 | Complete |
 | COPY-01 | Phase 1 | Complete |
 | COPY-02 | Phase 1 | Complete |
-| COPY-03 | Phase 1 | Pending |
+| COPY-03 | Phase 1 | Complete |
 | INV-01 | Phase 2 | Pending |
 | INV-02 | Phase 2 | Pending |
 | INV-03 | Phase 2 | Pending |
