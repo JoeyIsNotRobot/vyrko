@@ -89,8 +89,18 @@ const showErrors = (errors) => {
     if (!box) return;
 
     const list = Array.isArray(errors) ? errors : Object.values(errors || {}).flat();
-    const items = list.map((item) => `<li>${item}</li>`).join('');
-    box.innerHTML = `<strong>${config.reviewDataText || 'Revise os dados:'}</strong><ul>${items}</ul>`;
+
+    box.replaceChildren();
+    const heading = document.createElement('strong');
+    heading.textContent = config.reviewDataText || 'Revise os dados:';
+    const ul = document.createElement('ul');
+    list.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+    });
+    box.appendChild(heading);
+    box.appendChild(ul);
     box.hidden = false;
     box.scrollIntoView({behavior: 'smooth', block: 'center'});
 };
