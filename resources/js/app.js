@@ -138,6 +138,21 @@ document.addEventListener('submit', async (event) => {
         if (button.dataset.loadingText) button.textContent = button.dataset.loadingText;
     });
 
+    let importTimers = [];
+    const isImport = form.dataset.importForm !== undefined; // triggers when form has data-import-form attribute
+
+    if (isImport) {
+        window.dispatchEvent(new CustomEvent('open-loading-modal', {
+            detail: { steps: ['Lendo documento', 'Extraindo dados', 'Organizando perfil', 'Concluído'] }
+        }));
+        importTimers.push(setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('advance-loading-modal', { detail: { step: 1 } }));
+        }, 800));
+        importTimers.push(setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('advance-loading-modal', { detail: { step: 2 } }));
+        }, 1800));
+    }
+
     try {
         const response = await fetch(form.action, {
             method: 'POST',
@@ -148,6 +163,8 @@ document.addEventListener('submit', async (event) => {
             },
             body: new FormData(form),
         });
+
+        if (isImport) importTimers.forEach(clearTimeout);
 
         const text = await response.text();
         let payload;
@@ -160,6 +177,11 @@ document.addEventListener('submit', async (event) => {
         }
 
         if (!response.ok) {
+            if (isImport) {
+                const errMsg = payload.message || (payload.errors ? Object.values(payload.errors).flat()[0] : null) || 'Algo deu errado ao processar o arquivo. Tente novamente em alguns instantes.';
+                window.dispatchEvent(new CustomEvent('fail-loading-modal', { detail: { message: errMsg } }));
+                return;
+            }
             showErrors(payload.errors || [payload.message || 'Erro']);
             return;
         }
@@ -174,8 +196,17 @@ document.addEventListener('submit', async (event) => {
         if (options && payload.experienceOptions) options.innerHTML = payload.experienceOptions;
 
         if (form.dataset.resetOnSuccess !== undefined) form.reset();
+        if (isImport) {
+            window.dispatchEvent(new CustomEvent('succeed-loading-modal'));
+            window.dispatchEvent(new CustomEvent('import:success'));
+        }
         showMessage(payload.message || config.savedText || 'Salvo.');
     } catch (error) {
+        if (isImport) {
+            importTimers.forEach(clearTimeout);
+            window.dispatchEvent(new CustomEvent('fail-loading-modal', { detail: { message: error.message || 'Algo deu errado. Tente novamente.' } }));
+            return;
+        }
         showErrors([error.message]);
     } finally {
         form.classList.remove('is-loading');
