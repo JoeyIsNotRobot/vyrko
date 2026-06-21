@@ -45,7 +45,11 @@ Plans:
   1. O topo da página de inventário exibe seção de importação com destaque, aceitando PDF, DOCX e TXT explicitamente
   2. Ao importar, o modal de loading mostra os steps "Lendo documento → Extraindo dados → Organizando perfil → Concluído" com barra de progresso animada
   3. Após importação, os campos do inventário são preenchidos com os dados reais do documento (nome, cargo, empresa, responsabilidades, habilidades, educação, idiomas com nível, certificações) sem dados inventados ou genéricos
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — Card de importação Alpine no topo (drop zone + drag-drop) + remoção do form da sidebar
+- [ ] 02-02-PLAN.md — Listeners CustomEvent no loading-modal + integração AJAX data-import-form com modal steps
+- [ ] 02-03-PLAN.md — Sub-schemas tipados no resumeImportParsePrompt + badge "via IA" via flash session
 **UI hint**: yes
 
 ### Phase 3: Workspace de Vagas
@@ -93,7 +97,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Design System + Dashboard + Copy | 3/3 | Complete | 2026-06-20 |
-| 2. Inventário com Import | TBD | Not started | - |
+| 2. Inventário com Import | 0/3 | Not started | - |
 | 3. Workspace de Vagas | TBD | Not started | - |
 | 4. LinkedIn QueryBuilder v2 | TBD | Not started | - |
 | 5. Monetização MVP | TBD | Not started | - |
