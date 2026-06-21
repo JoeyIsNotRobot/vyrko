@@ -7,11 +7,15 @@
     x-transition:leave="transition ease-in duration-150"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    @keydown.escape.window.prevent="if (show && !error) $event.preventDefault()"
+    @keydown.escape.window="if (show && !error) $event.preventDefault()"
+    @open-loading-modal.window="open($event.detail.steps)"
+    @advance-loading-modal.window="advance($event.detail.step)"
+    @succeed-loading-modal.window="succeed()"
+    @fail-loading-modal.window="fail($event.detail.message)"
     class="fixed inset-0 z-50 backdrop-blur-md bg-black/60 flex items-center justify-center"
     role="dialog"
     aria-modal="true"
-    aria-label="Processando..."
+    aria-label="Processando seu currículo"
     style="display: none;"
 >
     <div class="bg-slate-800 rounded-xl p-8 w-full max-w-md mx-4 shadow-2xl border border-slate-700">
