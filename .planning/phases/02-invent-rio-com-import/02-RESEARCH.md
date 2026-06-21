@@ -486,21 +486,13 @@ window.dispatchEvent(new CustomEvent('fail-loading-modal', { detail: { message: 
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **`pdftotext` em produção (Docker)**
-   - O que sabemos: disponível no ambiente local (Ubuntu, poppler-utils)
-   - O que está incerto: se o Dockerfile do Sail inclui `poppler-utils`
-   - Recomendação: verificar `docker-compose.yml` e o Dockerfile do Sail; se ausente, adicionar `apt-get install -y poppler-utils`
+1. **`pdftotext` em produção (Docker)** — RESOLVED: out-of-scope para esta fase. Deployar com `poppler-utils` no Dockerfile é concern de infra, não bloqueia execução local. Assumption A1 documentada.
 
-2. **Comportamento do modal ao receber resposta antes do step 2**
-   - O que sabemos: Gemini 2.5 Flash pode responder em <1s para textos curtos
-   - O que está incerto: se os `setTimeout` de 800ms/1800ms avançarão além da resposta real
-   - Recomendação: Ao receber a resposta do servidor, limpar os timeouts pendentes (`clearTimeout(t1); clearTimeout(t2)`) e chamar `succeed()` imediatamente.
+2. **Comportamento do modal ao receber resposta antes do step 2** — RESOLVED: Plan 02 Task 2 implementa `clearTimeout(t1); clearTimeout(t2)` antes de chamar `succeed()`, garantindo que resposta rápida do servidor não deixa timers pendentes.
 
-3. **Badge "via IA" — session flash vs. localStorage**
-   - O que sabemos: ambos funcionam; localStorage requer que o JS processe os IDs; session flash requer que o Blade view marque os itens
-   - Recomendação: session flash é mais simples e não depende de JS para renderizar — o HTML retornado pelo `careerResponse` já pode incluir o badge nos itens cujos IDs estejam na sessão
+3. **Badge "via IA" — session flash vs. localStorage** — RESOLVED: Plan 03 Task 2 usa `session()->flash('just_imported', true)` (flash boolean). Mais simples, server-side, sem mudanças no ResumeImportService.
 
 ---
 
