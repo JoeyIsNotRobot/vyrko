@@ -410,6 +410,30 @@ class VyrkoMvpTest extends TestCase
         $this->assertNotNull($user->refresh()->password_set_at);
     }
 
+    public function test_card_importacao_aparece_no_topo(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('career.index'))
+            ->assertStatus(200)
+            ->assertSee('Importe seu currículo')
+            ->assertSee('IMPORTAR CURRÍCULO')
+            ->assertSee('data-import-form', false)
+            ->assertSee('multipart/form-data', false)
+            ->assertSee(route('career.import'), false);
+    }
+
+    public function test_form_antigo_nao_aparece_na_sidebar(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('career.index'))
+            ->assertStatus(200)
+            ->assertDontSee('Importar e enriquecer');
+    }
+
     /**
      * @param  array<string, mixed>  $userOverrides
      * @return array{0: User, 1: JobPost}

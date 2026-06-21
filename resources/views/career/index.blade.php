@@ -297,6 +297,80 @@
                 align-items: flex-start;
             }
         }
+
+        .import-card {
+            border: 1px solid var(--border, #334155);
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(45, 45, 48, .86), rgba(37, 37, 38, .82));
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .import-drop-zone {
+            min-height: 120px;
+            border: 1px dashed #334155;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .16s ease, background .16s ease;
+        }
+
+        .import-drop-zone:hover,
+        .import-drop-zone.drag-over {
+            border-color: rgba(37, 99, 235, .5);
+            background: rgba(37, 99, 235, .05);
+        }
+
+        .import-drop-zone.drag-active {
+            border: 2px dashed #2563EB;
+            background: rgba(37, 99, 235, .10);
+        }
+
+        .import-drop-zone.has-file {
+            border: 1px solid #2563EB;
+            background: rgba(37, 99, 235, .08);
+        }
+
+        .import-drop-zone.has-error {
+            border: 1px solid #EF4444;
+            background: rgba(239, 68, 68, .08);
+        }
+
+        .import-format-chips {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .import-format-chip {
+            background: rgba(45, 55, 72, .8);
+            border: 1px solid #475569;
+            border-radius: 999px;
+            padding: 2px 12px;
+            font-size: 13px;
+            color: var(--color-muted, #94A3B8);
+        }
+
+        .import-success-banner {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: rgba(16, 185, 129, .1);
+            border: 1px solid rgba(16, 185, 129, .3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .import-upload-icon {
+            color: var(--color-muted, #94A3B8);
+            flex-shrink: 0;
+        }
     </style>
 @endpush
 
@@ -317,6 +391,106 @@
 
         <div id="career-status" class="alert ok" hidden></div>
         <div id="career-errors" class="alert error" hidden></div>
+
+        <div
+            class="import-card"
+            x-data="{
+                file: null,
+                dragOver: false,
+                fileError: null,
+                importSuccess: false,
+                setFile(f) {
+                    const allowed = ['pdf', 'docx', 'txt'];
+                    const ext = f.name.split('.').pop().toLowerCase();
+                    if (!allowed.includes(ext)) {
+                        this.fileError = 'Formato não suportado. Use um arquivo PDF, DOCX ou TXT.';
+                        this.file = null;
+                        return;
+                    }
+                    this.fileError = null;
+                    this.file = f;
+                    const dt = new DataTransfer();
+                    dt.items.add(f);
+                    $refs.fileInput.files = dt.files;
+                },
+                handleDrop(e) {
+                    e.preventDefault();
+                    this.dragOver = false;
+                    const f = e.dataTransfer?.files?.[0];
+                    if (f) this.setFile(f);
+                }
+            }"
+            @import:success.window="importSuccess = true; setTimeout(() => importSuccess = false, 8000)"
+        >
+            <p class="eyebrow" style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-muted);">IMPORTAR CURRÍCULO</p>
+            <h2 style="font-size:clamp(20px,2.5vw,28px);font-weight:700;color:var(--color-text,#F1F5F9);margin:4px 0 8px;">Importe seu currículo</h2>
+            <p style="font-size:16px;color:var(--color-muted);margin:0 0 20px;">Suba PDF, DOCX ou TXT e a IA preenche o inventário campo a campo.</p>
+
+            <div
+                class="import-success-banner"
+                x-show="importSuccess"
+                x-transition
+                role="status"
+                aria-live="polite"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+                <div>
+                    <strong style="color:#10b981;display:block;margin-bottom:4px;">Importação concluída</strong>
+                    <p style="margin:0;font-size:14px;color:var(--color-muted);">Seu inventário foi atualizado. Revise os campos abaixo.</p>
+                </div>
+            </div>
+
+            <form data-import-form data-career-ajax method="POST" action="{{ route('career.import') }}" enctype="multipart/form-data">
+                @csrf
+                <label
+                    class="import-drop-zone"
+                    :class="{ 'drag-active': dragOver, 'has-file': file && !fileError, 'has-error': fileError }"
+                    @click.self="$refs.fileInput.click()"
+                    @dragover.prevent="dragOver = true"
+                    @dragleave="dragOver = false"
+                    @drop="handleDrop($event)"
+                    role="button"
+                    aria-label="Área de upload — arraste ou clique para selecionar"
+                >
+                    <svg class="import-upload-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+
+                    <span x-show="!file && !fileError" style="font-size:16px;color:var(--color-muted);">Arraste seu arquivo aqui ou clique para selecionar</span>
+                    <span x-show="dragOver" style="font-size:16px;color:#8bd8ff;">Solte o arquivo aqui</span>
+                    <span
+                        x-show="file && !fileError"
+                        x-text="file ? file.name + ' · ' + (file.size > 1048576 ? (file.size/1048576).toFixed(1)+'MB' : Math.round(file.size/1024)+'KB') : ''"
+                        style="font-size:15px;color:var(--color-text,#F1F5F9);"
+                    ></span>
+                    <span x-show="fileError" x-text="fileError" style="color:#EF4444;font-size:13px;" role="alert"></span>
+
+                    <input
+                        x-ref="fileInput"
+                        type="file"
+                        name="resume"
+                        accept=".pdf,.docx,.txt"
+                        class="sr-only"
+                        aria-label="Selecionar arquivo de currículo"
+                        @change="setFile($event.target.files[0])"
+                        required
+                    >
+                </label>
+
+                <div class="import-format-chips">
+                    <span class="import-format-chip">PDF</span>
+                    <span class="import-format-chip">DOCX</span>
+                    <span class="import-format-chip">TXT</span>
+                </div>
+
+                <button type="submit" class="btn" style="margin-top:16px;min-height:44px;" :disabled="!file || !!fileError">Importar currículo</button>
+            </form>
+        </div>
 
         <section id="career-items">
             @include('career.partials.inventory-list', ['user' => $user])
