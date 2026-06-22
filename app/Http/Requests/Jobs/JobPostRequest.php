@@ -23,6 +23,7 @@ class JobPostRequest extends FormRequest
             'target_language' => ['required', 'in:pt_BR,en'],
             'resume_type' => ['required', 'in:national_brazil,international,tech,executive'],
             'notes' => ['nullable', 'string', 'max:4000'],
+            'linkedin_url' => ['nullable', 'string', 'url', 'max:500', 'regex:/linkedin\.com\/jobs/'],
         ];
     }
 }

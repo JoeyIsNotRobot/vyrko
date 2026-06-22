@@ -494,6 +494,27 @@ class VyrkoMvpTest extends TestCase
         ]);
     }
 
+    public function test_linkedin_url_is_stored_with_job_post(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        CandidateProfile::factory()->for($user)->create(['first_name' => 'Test', 'last_name' => 'User']);
+
+        $this->actingAs($user)
+            ->post(route('jobs.store'), [
+                'title' => 'Senior Engineer',
+                'company_name' => 'Acme',
+                'job_description' => str_repeat('x', 100),
+                'target_language' => 'pt_BR',
+                'resume_type' => 'tech',
+                'linkedin_url' => 'https://www.linkedin.com/jobs/view/4393083468/',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('job_posts', [
+            'linkedin_url' => 'https://www.linkedin.com/jobs/view/4393083468/',
+        ]);
+    }
+
     private function hectorResumeText(): string
     {
         return <<<'TEXT'
