@@ -17,6 +17,7 @@ use App\Http\Controllers\CandidateSkillController;
 use App\Http\Controllers\CareerProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobAnalysisController;
+use App\Http\Controllers\JobFetchController;
 use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\LinkedinAnalysisController;
@@ -101,6 +102,10 @@ Route::middleware('auth')->group(function (): void {
         ->name('linkedin-search.index');
     Route::post('/linkedin-search-builder', [LinkedInSearchController::class, 'generate'])
         ->name('linkedin-search.generate');
+
+    Route::post('/jobs/fetch-linkedin', JobFetchController::class)
+        ->middleware('throttle:20,1')
+        ->name('jobs.fetch-linkedin');
 });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
