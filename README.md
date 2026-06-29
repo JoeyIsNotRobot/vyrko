@@ -24,7 +24,7 @@ Paste a job URL or description → AI extracts structured requirements → gener
 - **Gap analysis**: critical vs. acceptable gaps, actionable recommendations
 
 ### Resume Generation
-Generates ATS-optimized resumes from your inventory — using only evidence you actually have. Three templates: ATS Classic, Tech Compact, International Clean. Export via PDF.
+Generates ATS-optimized resumes from your inventory — using only evidence you actually have. Four templates: Tech, Brazilian, International, Executive. Export via PDF.
 
 ### ATS Checklist
 AI-generated checklist per resume version, stored in the database, flagging formatting and keyword issues before submission.
@@ -34,7 +34,7 @@ AI-generated checklist per resume version, stored in the database, flagging form
 - **Boolean Search Builder**: generates optimized LinkedIn search queries for any target role
 
 ### Authentication & Onboarding
-OAuth via Google and LinkedIn (Laravel Socialite). Consent-based social data collection, email verification, guided onboarding flow.
+OAuth via Google (Laravel Socialite). Consent-based social data collection, email verification, guided onboarding flow.
 
 ### Usage Limits
 Credit system with per-feature limits, usage logging (`AiRun`), and a foundation for paid plans (Free / Pay-per-use / Sprint / Pro).
@@ -49,7 +49,7 @@ Credit system with per-feature limits, usage logging (`AiRun`), and a foundation
 | Frontend | Blade · Alpine.js · Tailwind CSS 4 · Vite |
 | AI | Google Gemini 2.5 Flash (structured JSON output, temperature 0.2) |
 | Database | MySQL 8.4 · Redis |
-| Auth | Laravel Socialite (Google + LinkedIn OAuth) |
+| Auth | Laravel Socialite (Google OAuth) |
 | Infrastructure | Docker via Laravel Sail |
 | Fonts | Geist Sans · JetBrains Mono |
 
