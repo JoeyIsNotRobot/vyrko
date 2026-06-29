@@ -75,7 +75,7 @@
         </div>
         <div class="grid grid-4">
             @foreach ([
-                ['1', 'Crie sua fonte de carreira', 'Importe um currículo, cole seu LinkedIn ou preencha manualmente experiências, habilidades, cursos e projetos.'],
+                ['1', 'Crie sua fonte de carreira', 'Importe um currículo, cole um perfil atual ou preencha manualmente experiências, habilidades, cursos e projetos.'],
                 ['2', 'Cole a vaga', 'O Vyrko identifica requisitos, palavras-chave, senioridade, responsabilidades e sinais importantes da descrição.'],
                 ['3', 'Veja o diagnóstico', 'Entenda onde há evidência forte, match parcial e quais pontos não devem ser afirmados.'],
                 ['4', 'Gere e revise', 'Escolha um modelo, revise o texto final e baixe uma versão pronta para envio.'],
@@ -113,7 +113,7 @@
                 ['Match com evidências', 'Veja por que seu perfil combina ou não com a vaga.', 'Cada requisito pode ser ligado a experiências, habilidades, projetos ou conquistas.'],
                 ['Gaps reais', 'Saiba o que falta antes de enviar.', 'Identifique pontos críticos, moderados e aceitáveis sem transformar ausência em afirmação falsa.'],
                 ['Currículos por modelo', 'Escolha o formato certo para cada candidatura.', 'Gere versões como ATS Classic, Tech Compact ou International Clean.'],
-                ['LinkedIn manual', 'Melhore seu posicionamento sem scraping.', 'Cole textos do perfil para receber sugestões de headline, about, skills e consistência.'],
+                ['Carta de apresentação', 'Gerada junto com o currículo, sob demanda.', 'Peça uma carta de apresentação personalizada para a vaga com base no seu inventário e no diagnóstico de match.'],
             ] as [$eyebrow, $title, $copy])
                 <article class="card feature-card">
                     <p class="eyebrow">{{ $eyebrow }}</p>
@@ -133,7 +133,7 @@
         <div class="grid grid-3 pricing-grid">
             @foreach ([
                 ['Gratuito', 'Para testar o fluxo.', ['1 Inventário de Carreira', 'Análises limitadas de vaga', 'Gerações limitadas de currículo', 'Modelos básicos'], 'Começar grátis'],
-                ['Pro', 'Para quem aplica para várias vagas.', ['Mais análises mensais', 'Mais currículos gerados', 'Análise manual de LinkedIn', 'Histórico de versões'], 'Entrar na lista Pro'],
+                ['Pro', 'Para quem aplica para várias vagas.', ['Mais análises mensais', 'Mais currículos gerados', 'Carta de apresentação gerada', 'Histórico de versões'], 'Entrar na lista Pro'],
                 ['Consultor', 'Para mentores e consultores de carreira.', ['Múltiplos perfis', 'Gestão de clientes', 'Biblioteca de versões', 'Recursos futuros de white-label'], 'Falar sobre acesso'],
             ] as [$name, $description, $items, $cta])
                 <article class="card pricing-card">

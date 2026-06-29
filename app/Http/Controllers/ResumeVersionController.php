@@ -135,7 +135,8 @@ class ResumeVersionController extends Controller
             $report = $jobPost->matchReports()->latest()->first()
                 ?: $jobMatchAnalyzer->analyze($user, $jobPost);
 
-            $resume = $resumeGenerator->generate($user, $jobPost, $report);
+            $includeCoverLetter = request()->boolean('include_cover_letter');
+            $resume = $resumeGenerator->generate($user, $jobPost, $report, $includeCoverLetter);
             $atsChecklistAnalyzer->analyze($resume);
         } catch (InvalidArgumentException $exception) {
             return back()->withErrors(['generation' => $exception->getMessage()]);

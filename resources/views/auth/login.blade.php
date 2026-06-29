@@ -23,12 +23,11 @@
             <div>
                 <p class="eyebrow">{{ $en ? 'Secure sign in' : 'Entrada segura' }}</p>
                 <h2>{{ $en ? 'Access your account' : 'Acesse sua conta' }}</h2>
-                <p>{{ $en ? 'Continue with Google, LinkedIn or email.' : 'Continue com Google, LinkedIn ou e-mail.' }}</p>
+                <p>{{ $en ? 'Continue with Google or email.' : 'Continue com Google ou e-mail.' }}</p>
             </div>
 
             <x-auth.social-buttons
                 :google-label="$en ? 'Continue with Google' : 'Continuar com Google'"
-                :linkedin-label="$en ? 'Continue with LinkedIn' : 'Continuar com LinkedIn'"
             />
 
             <div class="auth-divider"><span>{{ $en ? 'or' : 'ou' }}</span></div>

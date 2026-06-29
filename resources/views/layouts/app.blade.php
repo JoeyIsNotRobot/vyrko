@@ -30,7 +30,6 @@
                                 <a class="navlink @if(request()->routeIs('career.*', 'experiences.*', 'achievements.*', 'skills.*', 'projects.*', 'educations.*', 'certifications.*', 'languages.*')) is-active @endif" href="{{ route('career.index') }}">{{ __('messages.nav.career') }}</a>
                                 <a class="navlink @if(request()->routeIs('jobs.*')) is-active @endif" href="{{ route('jobs.index') }}">{{ app()->getLocale() === 'en' ? 'Jobs' : 'Vagas' }}</a>
                                 <a class="navlink @if(request()->routeIs('resumes.*')) is-active @endif" href="{{ route('resumes.index') }}">{{ __('messages.nav.resumes') }}</a>
-                                <a class="navlink @if(request()->routeIs('linkedin.*')) is-active @endif" href="{{ route('linkedin.index') }}">{{ __('messages.nav.linkedin') }}</a>
                                 <a class="navlink @if(request()->routeIs('linkedin-search.*')) is-active @endif" href="{{ route('linkedin-search.index') }}">
                                     {{ app()->getLocale() === 'en' ? 'Search Builder' : 'Search Builder' }}
                                     <span class="badge-free" style="margin-left:4px;">{{ app()->getLocale() === 'en' ? 'Free' : 'Grátis' }}</span>
@@ -93,10 +92,12 @@
                 <a href="{{ route('legal.privacy') }}">{{ app()->getLocale() === 'en' ? 'Privacy' : 'Privacidade' }}</a>
                 <a href="{{ route('legal.data-consent') }}">{{ app()->getLocale() === 'en' ? 'AI data consent' : 'Consentimento de IA' }}</a>
                 <a href="{{ route('legal.social-data') }}">{{ app()->getLocale() === 'en' ? 'Social data' : 'Dados sociais' }}</a>
+                <a href="mailto:contato@vyrko.com.br">{{ app()->getLocale() === 'en' ? 'Contact us' : 'Fale conosco' }}</a>
             </footer>
         </div>
         <script>
             window.Vyrko = {
+                lang: @json(app()->getLocale()),
                 processingText: @json(app()->getLocale() === 'en' ? 'Processing...' : 'Processando...'),
                 reviewDataText: @json(__('messages.common.review_data')),
                 savedText: @json(__('messages.common.saved')),

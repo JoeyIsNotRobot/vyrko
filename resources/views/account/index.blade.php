@@ -1,13 +1,12 @@
 @extends('layouts.app')
 
 @section('meta_title', 'Minha conta — Vyrko')
-@section('meta_description', 'Gerencie perfil, e-mail, senha, Google, LinkedIn, privacidade e consentimentos no Vyrko.')
+@section('meta_description', 'Gerencie perfil, e-mail, senha, Google, privacidade e consentimentos no Vyrko.')
 
 @section('content')
     @php
         $en = app()->getLocale() === 'en';
         $accounts = $user->socialAccounts->keyBy('provider');
-        $linkedin = $accounts->get('linkedin');
         $google = $accounts->get('google');
         $consents = $user->userConsents->sortByDesc('accepted_at')->groupBy('type');
     @endphp
@@ -15,7 +14,7 @@
     <x-ui.page-header
         :eyebrow="$en ? 'My account' : 'Minha conta'"
         :title="$en ? 'Your account' : 'Sua conta'"
-        :subtitle="$en ? 'Update your basic profile, manage sign-in methods and review privacy links without exposing internal tokens.' : 'Atualize perfil básico, gerencie métodos de entrada e revise links de privacidade sem expor tokens internos.'"
+        :subtitle="$en ? 'Update your basic profile, manage sign-in methods and review your data and privacy links.' : 'Atualize perfil básico, gerencie métodos de entrada e revise seus dados e links de privacidade.'"
     >
         <x-slot:actions>
             <a class="btn" href="{{ route('jobs.create') }}">{{ $en ? 'Analyze a job' : 'Analisar uma vaga' }}</a>
@@ -24,7 +23,7 @@
 
     <section class="summary-grid">
         <x-ui.metric-card :label="$en ? 'Email status' : 'Status do e-mail'" :value="$user->hasVerifiedEmail() ? ($en ? 'Verified' : 'Verificado') : ($en ? 'Pending' : 'Pendente')" :tone="$user->hasVerifiedEmail() ? 'success' : 'warning'" :meta="$user->pending_email ? ($en ? 'Change pending' : 'Troca pendente') : $user->email" />
-        <x-ui.metric-card :label="$en ? 'Connected providers' : 'Provedores conectados'" :value="$accounts->count()" :meta="$en ? 'Google and LinkedIn' : 'Google e LinkedIn'" />
+        <x-ui.metric-card :label="$en ? 'Connected providers' : 'Provedores conectados'" :value="$accounts->count()" :meta="$en ? 'Google' : 'Google'" />
         <x-ui.metric-card :label="$en ? 'Password login' : 'Login por senha'" :value="$user->hasPasswordLogin() ? 'OK' : '—'" :tone="$user->hasPasswordLogin() ? 'success' : 'warning'" :meta="$user->hasPasswordLogin() ? ($en ? 'Enabled' : 'Ativo') : ($en ? 'Create one before disconnecting all social accounts' : 'Crie antes de desconectar todas as contas sociais')" />
         <x-ui.metric-card :label="$en ? 'Data policy' : 'Política de dados'" :value="$en ? 'No scrape' : 'Sem scrape'" :meta="$en ? 'Official provider data only' : 'Apenas dados oficiais dos provedores'" />
     </section>
@@ -109,40 +108,38 @@
         </div>
 
         <aside class="stack-lg">
-            @foreach ([['google', 'Google', $google], ['linkedin', 'LinkedIn', $linkedin]] as [$provider, $label, $account])
-                <article class="card stack-lg">
-                    <div class="actions between">
-                        <div>
-                            <p class="eyebrow">{{ $label }}</p>
-                            <h2>{{ $account ? ($label.' conectado') : ('Conectar '.$label) }}</h2>
-                            <p>{{ $provider === 'linkedin' ? 'Dados completos dependem das permissões oficiais disponíveis. Sem scraping.' : 'Use autenticação oficial para acesso rápido.' }}</p>
-                        </div>
-                        <span class="badge {{ $account ? '' : 'warning' }}">{{ $account ? 'Conectado' : 'Não conectado' }}</span>
+            <article class="card stack-lg">
+                <div class="actions between">
+                    <div>
+                        <p class="eyebrow">Google</p>
+                        <h2>{{ $google ? 'Google conectado' : 'Conectar Google' }}</h2>
+                        <p>{{ $en ? 'Use official authentication for quick access.' : 'Use autenticação oficial para acesso rápido.' }}</p>
                     </div>
+                    <span class="badge {{ $google ? '' : 'warning' }}">{{ $google ? ($en ? 'Connected' : 'Conectado') : ($en ? 'Not connected' : 'Não conectado') }}</span>
+                </div>
 
-                    @if ($account)
-                        <div class="connection-profile">
-                            @if ($account->avatar_url && str_starts_with($account->avatar_url, 'https://'))
-                                <img src="{{ $account->avatar_url }}" alt="" loading="lazy">
-                            @endif
-                            <div>
-                                <strong>{{ $account->name ?: $user->name }}</strong>
-                                <p>{{ $account->email ?: 'E-mail não retornado' }}</p>
-                                <p class="muted">Conectado em {{ $account->created_at->format('d/m/Y H:i') }}</p>
-                            </div>
+                @if ($google)
+                    <div class="connection-profile">
+                        @if ($google->avatar_url && str_starts_with($google->avatar_url, 'https://'))
+                            <img src="{{ $google->avatar_url }}" alt="" loading="lazy">
+                        @endif
+                        <div>
+                            <strong>{{ $google->name ?: $user->name }}</strong>
+                            <p>{{ $google->email ?: ($en ? 'Email not returned' : 'E-mail não retornado') }}</p>
+                            <p class="muted">{{ $en ? 'Connected on' : 'Conectado em' }} {{ $google->created_at->format('d/m/Y H:i') }}</p>
                         </div>
-                        <div class="actions">
-                            <a class="btn secondary" href="{{ route('auth.social.redirect', $provider) }}" data-loading-link data-loading-text="Atualizando...">Atualizar dados básicos</a>
-                            <form method="POST" action="{{ route('account.social.disconnect', $provider) }}">
-                                @csrf
-                                <button class="btn danger" type="submit">Desconectar</button>
-                            </form>
-                        </div>
-                    @else
-                        <a class="btn" href="{{ route('auth.social.redirect', $provider) }}" data-loading-link data-loading-text="Conectando...">Conectar {{ $label }}</a>
-                    @endif
-                </article>
-            @endforeach
+                    </div>
+                    <div class="actions">
+                        <a class="btn secondary" href="{{ route('auth.social.redirect', 'google') }}" data-loading-link data-loading-text="{{ $en ? 'Updating...' : 'Atualizando...' }}">{{ $en ? 'Update basic data' : 'Atualizar dados básicos' }}</a>
+                        <form method="POST" action="{{ route('account.social.disconnect', 'google') }}">
+                            @csrf
+                            <button class="btn danger" type="submit">{{ $en ? 'Disconnect' : 'Desconectar' }}</button>
+                        </form>
+                    </div>
+                @else
+                    <a class="btn" href="{{ route('auth.social.redirect', 'google') }}" data-loading-link data-loading-text="{{ $en ? 'Connecting...' : 'Conectando...' }}">{{ $en ? 'Connect Google' : 'Conectar Google' }}</a>
+                @endif
+            </article>
 
             <article class="card stack-lg">
                 <p class="eyebrow">{{ $en ? 'Data and privacy' : 'Dados e privacidade' }}</p>
@@ -151,7 +148,7 @@
                     <li><a href="{{ route('legal.terms') }}">Termos de Uso</a></li>
                     <li><a href="{{ route('legal.privacy') }}">Política de Privacidade</a></li>
                     <li><a href="{{ route('legal.data-consent') }}">Consentimento de IA e Dados</a></li>
-                    <li><a href="{{ route('legal.social-data') }}">Uso de dados de Google e LinkedIn</a></li>
+                    <li><a href="{{ route('legal.social-data') }}">{{ $en ? 'Social data usage' : 'Uso de dados sociais' }}</a></li>
                     <li>{{ $en ? 'Download my data: coming soon' : 'Baixar meus dados: em breve' }}</li>
                 </ul>
                 <button class="btn danger" type="button" disabled>{{ $en ? 'Delete account — coming soon' : 'Excluir conta — em breve' }}</button>

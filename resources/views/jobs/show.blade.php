@@ -22,8 +22,12 @@
                 </button>
                 <p class="loading-hint">{{ $en ? 'Extracting requirements and recalculating evidence.' : 'Extraindo requisitos e recalculando evidências.' }}</p>
             </form>
-            <form method="POST" action="{{ route('jobs.generate-resume', $jobPost) }}" data-loading>
+            <form method="POST" action="{{ route('jobs.generate-resume', $jobPost) }}" data-loading data-resume-generate>
                 @csrf
+                <label class="checkbox-line" style="margin-bottom:8px;font-size:13px;">
+                    <input type="checkbox" name="include_cover_letter" value="1">
+                    {{ $en ? 'Include cover letter' : 'Incluir carta de apresentação' }}
+                </label>
                 <button class="btn" type="submit" data-loading-text="{{ $en ? 'Generating...' : 'Gerando...' }}">{{ $en ? 'Generate resume' : 'Gerar currículo' }}</button>
                 <p class="loading-hint">{{ $en ? 'Creating a resume version and ATS checklist.' : 'Criando uma versão do currículo e checklist ATS.' }}</p>
             </form>
@@ -216,8 +220,12 @@
                 </div>
                 <div class="actions">
                     <a class="btn secondary" href="{{ route('career.index') }}">{{ $en ? 'Edit inventory' : 'Editar inventário' }}</a>
-                    <form method="POST" action="{{ route('jobs.generate-resume', $jobPost) }}" data-loading>
+                    <form method="POST" action="{{ route('jobs.generate-resume', $jobPost) }}" data-loading data-resume-generate>
                         @csrf
+                        <label class="checkbox-line" style="font-size:13px;">
+                            <input type="checkbox" name="include_cover_letter" value="1">
+                            {{ $en ? 'Include cover letter' : 'Incluir carta de apresentação' }}
+                        </label>
                         <button class="btn" type="submit" data-loading-text="{{ $en ? 'Generating...' : 'Gerando...' }}">{{ $en ? 'Generate tailored resume' : 'Gerar currículo direcionado' }}</button>
                     </form>
                 </div>
@@ -263,8 +271,12 @@
                 <h2>{{ $en ? 'Resumes for this job' : 'Currículos desta vaga' }}</h2>
                 <p>{{ $en ? 'Generated versions stay connected to this job and its match report.' : 'As versões geradas continuam conectadas a esta vaga e ao relatório de match.' }}</p>
             </div>
-            <form method="POST" action="{{ route('jobs.generate-resume', $jobPost) }}" data-loading>
+            <form method="POST" action="{{ route('jobs.generate-resume', $jobPost) }}" data-loading data-resume-generate>
                 @csrf
+                <label class="checkbox-line" style="margin-bottom:8px;font-size:13px;">
+                    <input type="checkbox" name="include_cover_letter" value="1">
+                    {{ $en ? 'Include cover letter' : 'Incluir carta de apresentação' }}
+                </label>
                 <button class="btn secondary" type="submit" data-loading-text="{{ $en ? 'Generating...' : 'Gerando...' }}">{{ $en ? 'Generate another version' : 'Gerar outra versão' }}</button>
                 <p class="loading-hint">{{ $en ? 'Creating resume and checklist...' : 'Criando currículo e checklist...' }}</p>
             </form>

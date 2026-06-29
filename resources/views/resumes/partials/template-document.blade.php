@@ -9,7 +9,7 @@
     $languages = $content['languages'] ?? [];
     $summary = $content['summary'] ?? '';
     $template = $template ?? 'ats-classic';
-    $en = app()->getLocale() === 'en';
+    $en = ($resumeVersion->language ?? app()->getLocale()) === 'en';
 @endphp
 
 <article class="resume-document {{ $template }}">
@@ -33,7 +33,7 @@
             <aside class="resume-sidebar">
                 @if ($skills !== [])
                     <section class="resume-section">
-                        <h2>{{ __('messages.sections.skills') }}</h2>
+                        <h2>{{ $en ? 'Skills' : 'Habilidades' }}</h2>
                         <div class="resume-skills">
                             @foreach ($skills as $group)
                                 <div class="resume-skill-row">
@@ -47,7 +47,7 @@
 
                 @if ($languages !== [])
                     <section class="resume-section">
-                        <h2>{{ __('messages.sections.languages') }}</h2>
+                        <h2>{{ $en ? 'Languages' : 'Idiomas' }}</h2>
                         @foreach ($languages as $language)
                             <p><strong>{{ $language['language'] ?? '' }}</strong><br>{{ $language['proficiency'] ?? '' }}</p>
                         @endforeach
@@ -56,7 +56,7 @@
 
                 @if ($certifications !== [])
                     <section class="resume-section">
-                        <h2>{{ __('messages.sections.certifications') }}</h2>
+                        <h2>{{ $en ? 'Certifications' : 'Certificações' }}</h2>
                         @foreach ($certifications as $certification)
                             <p><strong>{{ $certification['name'] ?? '' }}</strong><br>{{ $certification['issuer'] ?? '' }}</p>
                         @endforeach
@@ -85,7 +85,7 @@
 
         @if ($skills !== [])
             <section class="resume-section">
-                <h2>{{ __('messages.sections.skills') }}</h2>
+                <h2>{{ $en ? 'Skills' : 'Habilidades' }}</h2>
                 @if ($template === 'international-clean')
                     <div class="resume-pill-list">
                         @foreach ($skills as $group)
@@ -112,7 +112,7 @@
                 <div class="resume-grid">
                     @if ($certifications !== [])
                         <div>
-                            <h3>{{ __('messages.sections.certifications') }}</h3>
+                            <h3>{{ $en ? 'Certifications' : 'Certificações' }}</h3>
                             @foreach ($certifications as $certification)
                                 <p>{{ $certification['name'] ?? '' }} · {{ $certification['issuer'] ?? '' }}</p>
                             @endforeach
@@ -120,7 +120,7 @@
                     @endif
                     @if ($languages !== [])
                         <div>
-                            <h3>{{ __('messages.sections.languages') }}</h3>
+                            <h3>{{ $en ? 'Languages' : 'Idiomas' }}</h3>
                             @foreach ($languages as $language)
                                 <p>{{ $language['language'] ?? '' }} · {{ $language['proficiency'] ?? '' }}</p>
                             @endforeach

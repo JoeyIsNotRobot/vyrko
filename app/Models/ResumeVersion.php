@@ -20,6 +20,7 @@ class ResumeVersion extends Model
         'resume_type',
         'content',
         'plain_text',
+        'cover_letter_text',
         'status',
         'ats_checklist',
     ];

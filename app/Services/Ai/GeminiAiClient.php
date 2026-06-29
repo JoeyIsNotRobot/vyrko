@@ -86,8 +86,9 @@ Regras absolutas:
 - Nunca invente experiências, empresas, cargos, datas, cursos, certificações, números, métricas ou tecnologias.
 - Use apenas os dados enviados no payload.
 - Quando faltar evidência, marque como ausente em vez de preencher por suposição.
-- Em currículos e LinkedIn, reescreva com clareza, mas preserve a verdade factual.
+- Em currículos e textos gerados, reescreva com clareza, mas preserve a verdade factual.
 - Retorne arrays vazios quando uma informação não existir.
+- IDIOMA: Todo texto gerado (summary, bullets, carta de apresentação, recomendações) deve estar no idioma definido por target_language no payload. Se target_language for "pt_BR", escreva em português brasileiro. Se for "en", escreva em inglês. Nunca misture idiomas no mesmo output.
 PROMPT;
     }
 
@@ -136,7 +137,37 @@ PROMPT;
      */
     private function jobMatchReportPrompt(array $payload): string
     {
-        return $this->jsonPrompt('Compare a vaga com o inventário e gere um relatório de match. Use IDs de evidência somente quando eles existirem no inventário enviado.', [
+        return $this->jsonPrompt(
+            <<<'TASK'
+Compare a vaga com o inventário do candidato e gere um relatório de match detalhado.
+
+REGRAS DE MATCHING — leia com atenção:
+
+1. MATCHING SEMÂNTICO, NÃO LITERAL
+   - "PHP 8", "PHP 8.x", "PHP 8.5" → match se o inventário tiver "PHP" (versão é subset)
+   - "RESTful API" e "RESTful APIs" são o mesmo requisito
+   - "Node.js" = "NodeJS", "Postgres" = "PostgreSQL", "K8s" = "Kubernetes", etc.
+   - Trate variações de nomenclatura, siglas e versões como equivalentes
+
+2. INFERÊNCIA A PARTIR DE EXPERIÊNCIAS
+   - Procure evidências em TODOS os campos: skills, experience.responsibilities, experience.technologies, experience.description, achievements
+   - Se uma experiência menciona "otimização de queries", "índices", "cache" → conta como evidência para "Database Optimization", "Query Optimization", "Caching"
+   - Se o candidato trabalhou com "Laravel" → implica PHP, MVC, backend engineering
+   - Se tem experiência construindo APIs REST → conta como evidência para "API Development", "RESTful API", "Backend Engineering"
+   - Use o bom senso de um recrutador técnico experiente
+
+3. CLASSIFICAÇÃO DE STATUS
+   - strong_match: evidência direta e explícita no inventário (skill nomeada, cargo, responsabilidade direta)
+   - medium_match: evidência clara por inferência técnica (framework implica linguagem, responsabilidades implicam skill)
+   - partial: evidência fraca ou apenas menção superficial
+   - missing: genuinamente sem evidência — não use "missing" para algo que claramente está demonstrado nas experiências
+
+4. EVIDÊNCIAS — IDs OBRIGATÓRIOS
+   - Para cada match, referencie os IDs exatos dos itens do inventário enviado (skill.id, experience.id, etc.)
+   - Não invente IDs; use apenas IDs que existem no payload.inventory
+   - Um item pode ter múltiplas evidências de tipos diferentes (skill + experience)
+TASK,
+            [
             'allowed_evidence_statuses' => ['strong_match', 'medium_match', 'partial', 'missing'],
             'schema' => [
                 'overall_score' => 'integer 0-100',
@@ -171,40 +202,48 @@ PROMPT;
      */
     private function resumeGeneratePrompt(array $payload): string
     {
-        return $this->jsonPrompt('Gere um currículo direcionado para a vaga usando apenas o inventário e o mapa de evidências aprovadas. Não inclua tecnologias com status missing.', [
-            'schema' => [
-                'title' => 'string',
-                'content' => [
-                    'header' => [
-                        'name' => 'string',
-                        'headline' => 'string',
-                        'location' => 'string',
-                        'email' => 'string',
-                        'phone' => 'string',
-                        'links' => ['string'],
-                    ],
-                    'summary' => 'string',
-                    'skills' => [
-                        ['category' => 'string', 'items' => ['string']],
-                    ],
-                    'experiences' => [
-                        [
-                            'company' => 'string',
-                            'role' => 'string',
-                            'period' => 'string',
-                            'bullets' => [
-                                ['text' => 'string', 'evidence' => [['type' => 'string', 'id' => 'integer']]],
+        $coverLetterInstruction = ($payload['include_cover_letter'] ?? false)
+            ? 'Se include_cover_letter for true, gere também uma carta de apresentação personalizada em cover_letter_text. A carta deve ter 3 parágrafos: (1) conexão entre o candidato e a vaga, (2) evidências mais fortes que justificam a candidatura, (3) call-to-action. Escreva no mesmo idioma definido por target_language.'
+            : 'include_cover_letter é false — retorne cover_letter_text como null.';
+
+        return $this->jsonPrompt(
+            'Gere um currículo direcionado para a vaga usando apenas o inventário e o mapa de evidências aprovadas. Priorize e destaque os pontos fortes do candidato identificados em match_report.strengths e evidence_map com status strong_match ou medium_match. Não inclua tecnologias com status missing. IDIOMA OBRIGATÓRIO: escreva summary, todos os bullets de experiences, títulos de seções e qualquer texto gerado no idioma definido em target_language. Se target_language for "pt_BR", TODOS os textos devem ser em português brasileiro — mesmo que o inventário esteja em inglês, reescreva o conteúdo no idioma correto. Se for "en", escreva em inglês. Nomes de empresas, cargos e tecnologias permanecem como estão no inventário. '.$coverLetterInstruction,
+            [
+                'schema' => [
+                    'title' => 'string',
+                    'cover_letter_text' => 'string|null',
+                    'content' => [
+                        'header' => [
+                            'name' => 'string',
+                            'headline' => 'string',
+                            'location' => 'string',
+                            'email' => 'string',
+                            'phone' => 'string',
+                            'links' => ['string'],
+                        ],
+                        'summary' => 'string — destaque os pontos mais fortes em relação à vaga no primeiro parágrafo',
+                        'skills' => [
+                            ['category' => 'string', 'items' => ['string — ordene por relevância para a vaga']],
+                        ],
+                        'experiences' => [
+                            [
+                                'company' => 'string',
+                                'role' => 'string',
+                                'period' => 'string',
+                                'bullets' => [
+                                    ['text' => 'string — priorize bullets com evidências strong_match', 'evidence' => [['type' => 'string', 'id' => 'integer']]],
+                                ],
                             ],
                         ],
+                        'projects' => ['array'],
+                        'education' => ['array'],
+                        'certifications' => ['array'],
+                        'languages' => ['array'],
                     ],
-                    'projects' => ['array'],
-                    'education' => ['array'],
-                    'certifications' => ['array'],
-                    'languages' => ['array'],
                 ],
-            ],
-            'payload' => $payload,
-        ]);
+                'payload' => $payload,
+            ]
+        );
     }
 
     /**

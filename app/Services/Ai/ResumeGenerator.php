@@ -16,7 +16,7 @@ class ResumeGenerator
         private readonly AiClient $aiClient,
     ) {}
 
-    public function generate(User $user, JobPost $jobPost, JobMatchReport $report): ResumeVersion
+    public function generate(User $user, JobPost $jobPost, JobMatchReport $report, bool $includeCoverLetter = false): ResumeVersion
     {
         $inventory = $this->formatter->forUser($user);
         $profile = $inventory['profile'] ?? [];
@@ -40,11 +40,16 @@ class ResumeGenerator
                 'evidence_map' => $report->evidence_map ?? [],
             ],
             'inventory' => $inventory,
-            'language' => $jobPost->target_language,
+            'target_language' => $jobPost->target_language,
             'resume_type' => $jobPost->resume_type,
+            'include_cover_letter' => $includeCoverLetter,
         ]);
 
         $content = $this->sanitizeContent($result['content'] ?? [], $inventory, $profile, $user, $evidenceMap);
+
+        $coverLetterText = $includeCoverLetter && is_string($result['cover_letter_text'] ?? null) && trim((string) $result['cover_letter_text']) !== ''
+            ? trim((string) $result['cover_letter_text'])
+            : null;
 
         return ResumeVersion::create([
             'user_id' => $user->id,
@@ -57,6 +62,7 @@ class ResumeGenerator
             'resume_type' => $jobPost->resume_type,
             'content' => $content,
             'plain_text' => $this->renderer->toPlainText($content),
+            'cover_letter_text' => $coverLetterText,
             'status' => 'generated',
         ]);
     }

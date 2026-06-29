@@ -19,7 +19,6 @@ class JobPost extends Model
         'target_language',
         'resume_type',
         'notes',
-        'linkedin_url',
         'parsed_requirements',
         'parsed_keywords',
         'parsed_responsibilities',

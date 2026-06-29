@@ -27,60 +27,6 @@ Alpine.data('loadingModal', () => ({
     }
 }));
 
-Alpine.data('linkedinFetch', () => ({
-    url: '',
-    status: 'idle', // idle | loading | success | error
-    errorMsg: '',
-
-    extractJobId(url) {
-        try {
-            const u = new URL(url);
-            if (! u.hostname.includes('linkedin.com')) return null;
-            const fromParam = u.searchParams.get('currentJobId');
-            if (fromParam && /^\d+$/.test(fromParam)) return fromParam;
-            const match = u.pathname.match(/\/jobs\/view\/(\d+)/);
-            return match ? match[1] : null;
-        } catch {
-            return null;
-        }
-    },
-
-    async fetchJob(jobId) {
-        this.status = 'loading';
-        try {
-            const res = await fetch('/jobs/fetch-linkedin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: JSON.stringify({ job_id: jobId }),
-            });
-            if (! res.ok) throw new Error();
-            const data = await res.json();
-            if (data.title) document.querySelector('[name="title"]').value = data.title;
-            if (data.company) document.querySelector('[name="company_name"]').value = data.company;
-            if (data.description) document.querySelector('[name="job_description"]').value = data.description;
-            this.status = 'success';
-        } catch {
-            this.status = 'error';
-            this.errorMsg = 'Não foi possível buscar a vaga. Preencha manualmente.';
-        }
-    },
-
-    onInput(val) {
-        const jobId = this.extractJobId(val);
-        if (jobId) this.fetchJob(jobId);
-    },
-
-    onPaste(event) {
-        const text = (event.clipboardData || window.clipboardData).getData('text');
-        this.url = text;
-        const jobId = this.extractJobId(text);
-        if (jobId) this.fetchJob(jobId);
-    },
-}));
-
 Alpine.start();
 
 const config = window.Vyrko ?? {};
@@ -124,6 +70,23 @@ document.addEventListener('submit', (event) => {
         button.dataset.originalText = button.textContent;
         button.textContent = button.dataset.loadingText || config.processingText || 'Processando...';
     });
+
+    if (form.hasAttribute('data-resume-generate')) {
+        const pt = config.lang !== 'en';
+        const steps = pt
+            ? ['Lendo inventário', 'Selecionando evidências', 'Gerando conteúdo com IA', 'Otimizando para ATS']
+            : ['Reading inventory', 'Selecting evidence', 'Generating content with AI', 'Optimizing for ATS'];
+        window.dispatchEvent(new CustomEvent('open-loading-modal', { detail: { steps } }));
+        let i = 1;
+        const tick = setInterval(() => {
+            if (i < steps.length) {
+                window.dispatchEvent(new CustomEvent('advance-loading-modal', { detail: { step: i } }));
+                i++;
+            } else {
+                clearInterval(tick);
+            }
+        }, 3500);
+    }
 });
 
 const statusBox = () => document.getElementById('career-status');

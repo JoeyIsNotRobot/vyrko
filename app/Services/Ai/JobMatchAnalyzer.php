@@ -97,8 +97,8 @@ class JobMatchAnalyzer
             $status = (string) ($item['status'] ?? 'missing');
             $status = in_array($status, ['strong_match', 'medium_match', 'partial', 'missing'], true) ? $status : 'missing';
 
-            if ($evidence === []) {
-                $status = 'missing';
+            if ($evidence === [] && in_array($status, ['strong_match', 'medium_match'], true)) {
+                $status = 'partial';
             }
 
             $sanitized[$requirement] = [

@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('job_posts', function (Blueprint $table): void {
-            $table->string('linkedin_url', 500)->nullable()->after('notes');
+        Schema::table('resume_versions', function (Blueprint $table): void {
+            $table->text('cover_letter_text')->nullable()->after('plain_text');
         });
     }
 
     public function down(): void
     {
-        Schema::table('job_posts', function (Blueprint $table): void {
-            $table->dropColumn('linkedin_url');
+        Schema::table('resume_versions', function (Blueprint $table): void {
+            $table->dropColumn('cover_letter_text');
         });
     }
 };

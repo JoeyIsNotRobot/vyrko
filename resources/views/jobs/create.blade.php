@@ -23,30 +23,6 @@
     <section class="content-grid wide-aside">
         <form class="card stack-lg" method="POST" action="{{ route('jobs.store') }}" data-loading>
             @csrf
-            <div x-data="linkedinFetch" class="field">
-                <label>{{ $en ? 'LinkedIn job URL' : 'Link da vaga (LinkedIn)' }}</label>
-                <input
-                    name="linkedin_url"
-                    type="url"
-                    x-model="url"
-                    @paste.prevent="onPaste($event)"
-                    @input.debounce.400ms="onInput($event.target.value)"
-                    placeholder="https://www.linkedin.com/jobs/view/..."
-                    autocomplete="off"
-                >
-                <p class="form-help" x-show="status === 'idle' || status === 'success'">
-                    <template x-if="status === 'success'">
-                        <span>&#10003; {{ $en ? 'Job detected — fields filled below.' : 'Vaga detectada — campos preenchidos abaixo.' }}</span>
-                    </template>
-                    <template x-if="status !== 'success'">
-                        <span>{{ $en ? 'Optional. Paste the LinkedIn URL to auto-fill the fields below.' : 'Opcional. Cole o link do LinkedIn para preencher os campos abaixo automaticamente.' }}</span>
-                    </template>
-                </p>
-                <p class="form-help" x-show="status === 'loading'">{{ $en ? 'Fetching job...' : 'Buscando vaga...' }}</p>
-                <p class="form-help" x-show="status === 'error'" x-text="errorMsg" role="alert"></p>
-            </div>
-
-            <hr>
 
             <div class="panel-title">
                 <div>

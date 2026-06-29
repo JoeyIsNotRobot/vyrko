@@ -6,7 +6,7 @@
     <x-ui.page-header
         :eyebrow="$en ? 'Quick onboarding' : 'Onboarding rápido'"
         :title="$en ? 'Build a usable Career Inventory fast' : 'Crie um Inventário de Carreira útil rapidamente'"
-        :subtitle="$en ? 'Choose how to start, define your target role and continue with resume import, LinkedIn or guided manual entry.' : 'Escolha como começar, defina seu cargo alvo e continue com importação de currículo, LinkedIn ou preenchimento guiado.'"
+        :subtitle="$en ? 'Choose how to start, define your target role and continue with resume import or guided manual entry.' : 'Escolha como começar, defina seu cargo alvo e continue com importação de currículo ou preenchimento guiado.'"
     >
         <x-slot:actions>
             <a class="btn secondary" href="{{ route('dashboard') }}">{{ $en ? 'Skip for now' : 'Pular por enquanto' }}</a>
@@ -26,8 +26,7 @@
             <div class="choice-grid">
                 @foreach ([
                     'resume' => [$en ? 'Import resume' : 'Importar currículo', $en ? 'Upload PDF, DOCX or TXT to fill your inventory.' : 'Envie PDF, DOCX ou TXT para preencher seu inventário.', $en ? 'Import file' : 'Importar arquivo'],
-                    'linkedin' => [$en ? 'Connect LinkedIn' : 'Conectar LinkedIn', $en ? 'Use basic LinkedIn data and complete the rest manually.' : 'Use dados básicos do LinkedIn e complete o restante manualmente.', $en ? 'Connect LinkedIn' : 'Conectar LinkedIn'],
-                    'paste' => [$en ? 'Paste profile' : 'Colar perfil', $en ? 'Paste LinkedIn or current resume text.' : 'Cole conteúdo do LinkedIn ou currículo atual.', $en ? 'Paste text' : 'Colar texto'],
+                    'paste' => [$en ? 'Paste text' : 'Colar texto', $en ? 'Paste the text from a current resume or profile.' : 'Cole o texto de um currículo atual ou perfil profissional.', $en ? 'Paste text' : 'Colar texto'],
                     'manual' => [$en ? 'Fill manually' : 'Preencher manualmente', $en ? 'Start from zero with guided forms.' : 'Comece do zero com formulário guiado.', $en ? 'Fill now' : 'Preencher agora'],
                 ] as $value => [$title, $description, $cta])
                     <label class="choice-card">

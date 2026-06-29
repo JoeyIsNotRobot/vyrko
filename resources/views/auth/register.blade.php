@@ -13,7 +13,7 @@
             :subtitle="$en ? 'Start by importing a resume, connecting an account or filling information manually. You can review everything before generating any resume.' : 'Comece importando um currículo, conectando uma conta ou preenchendo manualmente. Você pode revisar tudo antes de gerar qualquer currículo.'"
             :bullets="[
                 $en ? 'Import PDF, DOCX or TXT when you already have a resume' : 'Importe PDF, DOCX ou TXT quando já tiver um currículo',
-                $en ? 'Use Google or LinkedIn only for official provider data' : 'Use Google ou LinkedIn apenas com dados oficiais do provedor',
+                $en ? 'Use Google only for official provider data' : 'Use Google apenas com dados oficiais do provedor',
                 $en ? 'AI supports writing, but does not invent experience' : 'A IA apoia a escrita, mas não inventa experiências',
             ]"
         />
@@ -28,7 +28,6 @@
 
             <x-auth.social-buttons
                 :google-label="$en ? 'Create account with Google' : 'Criar conta com Google'"
-                :linkedin-label="$en ? 'Create account with LinkedIn' : 'Criar conta com LinkedIn'"
             />
 
             <div class="auth-divider"><span>{{ $en ? 'or' : 'ou' }}</span></div>

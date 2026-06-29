@@ -1,6 +1,6 @@
 @if ($experiences !== [])
     <section class="resume-section">
-        <h2>{{ __('messages.sections.experiences') }}</h2>
+        <h2>{{ $en ? 'Experience' : 'Experiências' }}</h2>
         @foreach ($experiences as $experience)
             <div class="resume-item">
                 <h3>{{ $experience['role'] ?? '' }}</h3>
@@ -19,7 +19,7 @@
 
 @if ($projects !== [])
     <section class="resume-section">
-        <h2>{{ __('messages.sections.projects') }}</h2>
+        <h2>{{ $en ? 'Projects' : 'Projetos' }}</h2>
         @foreach ($projects as $project)
             <div class="resume-item">
                 <h3>{{ $project['name'] ?? '' }}</h3>
@@ -35,7 +35,7 @@
 
 @if ($educations !== [])
     <section class="resume-section">
-        <h2>{{ __('messages.sections.educations') }}</h2>
+        <h2>{{ $en ? 'Education' : 'Formação' }}</h2>
         @foreach ($educations as $education)
             <p><strong>{{ $education['degree'] ?? '' }}</strong> · {{ $education['field'] ?? '' }} · {{ $education['institution'] ?? '' }}</p>
         @endforeach

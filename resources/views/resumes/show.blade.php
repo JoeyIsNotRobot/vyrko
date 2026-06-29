@@ -3,6 +3,7 @@
 @section('content')
     @php
         $en = app()->getLocale() === 'en';
+        $resumeEn = $resumeVersion->language === 'en';
         $report = $resumeVersion->jobMatchReport;
         $content = $resumeVersion->content;
         $atsScore = $resumeVersion->ats_checklist['score'] ?? $report?->ats_format_score;
@@ -99,17 +100,17 @@
             <p>{{ $content['header']['headline'] ?? '' }}</p>
             <p class="muted">{{ collect([$content['header']['location'] ?? null, $content['header']['email'] ?? null, $content['header']['phone'] ?? null])->filter()->implode(' · ') }}</p>
 
-            <h3>{{ $en ? 'Summary' : 'Resumo' }}</h3>
+            <h3>{{ $resumeEn ? 'Summary' : 'Resumo' }}</h3>
             <p>{{ $content['summary'] ?? '' }}</p>
 
-            <h3>{{ __('messages.sections.skills') }}</h3>
+            <h3>{{ $resumeEn ? 'Skills' : 'Habilidades' }}</h3>
             @forelse ($skillGroups as $group)
                 <p><strong>{{ $group['category'] }}</strong>: {{ implode(', ', $group['items'] ?? []) }}</p>
             @empty
-                <p>{{ $en ? 'No skills selected for this version.' : 'Nenhuma habilidade selecionada para esta versão.' }}</p>
+                <p>{{ $resumeEn ? 'No skills selected for this version.' : 'Nenhuma habilidade selecionada para esta versão.' }}</p>
             @endforelse
 
-            <h3>{{ __('messages.sections.experiences') }}</h3>
+            <h3>{{ $resumeEn ? 'Experience' : 'Experiências' }}</h3>
             @forelse ($experiences as $experience)
                 <p><strong>{{ $experience['role'] }}</strong> · {{ $experience['company'] }} · {{ $experience['period'] }}</p>
                 <ul>
@@ -118,7 +119,7 @@
                     @endforeach
                 </ul>
             @empty
-                <p>{{ $en ? 'No experiences selected for this version.' : 'Nenhuma experiência selecionada para esta versão.' }}</p>
+                <p>{{ $resumeEn ? 'No experiences selected for this version.' : 'Nenhuma experiência selecionada para esta versão.' }}</p>
             @endforelse
         </article>
 
@@ -132,6 +133,18 @@
                 <textarea id="plainText" readonly class="large-textarea">{{ $resumeVersion->plain_text }}</textarea>
                 <button class="btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('plainText').value)">{{ __('messages.resume.copy_text') }}</button>
             </article>
+
+            @if ($resumeVersion->cover_letter_text)
+                <article class="card stack">
+                    <div>
+                        <p class="eyebrow">{{ $en ? 'Cover letter' : 'Carta de apresentação' }}</p>
+                        <h2>{{ $en ? 'Generated cover letter' : 'Carta de apresentação gerada' }}</h2>
+                        <p>{{ $en ? 'Review and adapt before sending.' : 'Revise e adapte antes de enviar.' }}</p>
+                    </div>
+                    <textarea id="coverLetterText" readonly class="large-textarea" style="min-height:220px">{{ $resumeVersion->cover_letter_text }}</textarea>
+                    <button class="btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('coverLetterText').value)">{{ $en ? 'Copy cover letter' : 'Copiar carta' }}</button>
+                </article>
+            @endif
 
             <article class="card stack">
                 <div>
